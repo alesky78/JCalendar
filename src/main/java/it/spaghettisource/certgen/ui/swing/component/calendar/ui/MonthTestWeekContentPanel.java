@@ -104,7 +104,7 @@ public class MonthTestWeekContentPanel extends JPanel {
     
     private CalendarEvent getEventFromrUI(final int x, final int y) {
     	int position = (y + 2)/17; 
-    	CalendarEvent event = grid.findEventAtPosition(position,layoutManager.getDate());
+    	CalendarEvent event = grid.findEventAtPosition(position,layoutManager.getStartRange());
     	return event;
     	
     }
@@ -141,14 +141,14 @@ public class MonthTestWeekContentPanel extends JPanel {
 
     	AgendaModel model = layoutManager.getOwner().getModel();
     	
-        final Collection<CalendarEvent> events = model.getEvents(layoutManager.getDate());        
+        final Collection<CalendarEvent> events = model.getEvents(layoutManager.getStartRange());        
         
         int pos = 2;
         int offset = 0;
         if (events.size() > 0) {
         	
             //prepare the grid
-        	Calendar temp = CalendarUtil.getCalendar(layoutManager.getDate(), true);
+        	Calendar temp = CalendarUtil.getCalendar(layoutManager.getStartRange(), true);
         	temp.set(Calendar.DAY_OF_WEEK, layoutManager.getFirstDayOfWeek());	//set first day of week used by the strategy
             Date startDate = temp.getTime();  
         	
@@ -162,7 +162,7 @@ public class MonthTestWeekContentPanel extends JPanel {
             final CalendarConfig config = layoutManager.getOwner().getConfig();
             for (final CalendarEvent event : events) {
                 
-            	offset = grid.findPosition(event, layoutManager.getDate());
+            	offset = grid.findPosition(event, layoutManager.getStartRange());
             	pos = 2 + offset*17;
             	
                 Color bgColor = event.getType().getBackgroundColor();

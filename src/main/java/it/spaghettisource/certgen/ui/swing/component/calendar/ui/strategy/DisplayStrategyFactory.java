@@ -24,6 +24,10 @@ public class DisplayStrategyFactory {
 				strategy = new DisplayStrategyMonthTestDay(calendar,contentPane,headerPane,data);
 				strategy.init();
 				return strategy;
+			case MONTH_TEST_WEEK:
+				strategy = new DisplayStrategyMonthTestWeek(calendar,contentPane,headerPane,data);
+				strategy.init();
+				return strategy;
 	
 			default:
 				throw new IllegalArgumentException("Unknown type " + type.toString());

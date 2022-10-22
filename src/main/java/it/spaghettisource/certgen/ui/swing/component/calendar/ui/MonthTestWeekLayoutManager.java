@@ -3,23 +3,26 @@ package it.spaghettisource.certgen.ui.swing.component.calendar.ui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JPanel;
 
 import it.spaghettisource.certgen.ui.swing.component.calendar.JCalendar;
+import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 
 /** 
- * this class is the layout manager used by the Month strategy, it represent a single day in the grid of the calendar
+ * this class is the layout manager used by the Month strategy, it represent a full week in the grid of the calendar
  * 
  * 
  * @author Alessandro D'Ottavio
  */
 public class MonthTestWeekLayoutManager {
 
-	private final SimpleDateFormat sdf = new SimpleDateFormat("EEE dd MMM");
+
 	
-	private Date day;	//day of this cell
+	private Date startRange;	//first date of the week
+	private Date endRange;		//last date of the week	
 	
 	private final MonthTestWeekHeaderPanel headerPanel;
 	private final MonthTestWeekContentPanel contentPanel;
@@ -30,17 +33,18 @@ public class MonthTestWeekLayoutManager {
 	/**
 	 * Creates a new instance of {@link MonthTestWeekLayoutManager}
 	 * 
-	 * @param day
+	 * @param startRange
 	 * @param headerRatio
 	 */
-	public MonthTestWeekLayoutManager(final JCalendar owner, final Date day,int firstDayOfWeek) {
+	public MonthTestWeekLayoutManager(final JCalendar owner, final Date startRange,int firstDayOfWeek) {
 
-		this.day = day;
+		setStartRange(startRange);
+		
 		this.owner = owner;
-		this.headerPanel = new MonthTestWeekHeaderPanel(this, sdf.format(day));
+		this.headerPanel = new MonthTestWeekHeaderPanel(this);
 		this.contentPanel = new MonthTestWeekContentPanel(this);
 		this.firstDayOfWeek = firstDayOfWeek;
-
+		
 	}
 
 	/**
@@ -79,19 +83,23 @@ public class MonthTestWeekLayoutManager {
 	}
 
 	/**
-	 * @return the date
-	 */
-	public Date getDate() {
-		return day;
-	}
-
-	/**
 	 * @param date
 	 *            the date to set
 	 */
-	public void setDate(final Date date) {
-		this.day = date;
-		headerPanel.setHeaderText(sdf.format(date));
+	public void setStartRange(final Date startRange) {
+		this.startRange = startRange;
+		Calendar temp = CalendarUtil.getCalendar(startRange, true);
+		temp.add(Calendar.DAY_OF_MONTH, 6);
+		this.endRange = temp.getTime();
+
+	}
+	
+	public Date getStartRange() {
+		return startRange;
+	}
+
+	public Date getEndRange() {
+		return endRange;
 	}
 
 	public void setEnabled(final boolean enabled) {

@@ -119,7 +119,6 @@ public class CalendarUtil {
     }
 
     public static Collection<Date> getDates(final Date start, final Date end) {
-
         final Set<Date> result = new HashSet<Date>();
         final Date endDay = stripTime(end);
         Date date = stripTime(start);
@@ -128,6 +127,12 @@ public class CalendarUtil {
             result.add(date);
 
         result.add(endDay);
+        return result;
+    }
+    
+    public static ArrayList<Date> getDatesSort(final Date start, final Date end) {
+    	ArrayList<Date> result = new ArrayList<Date>(getDates(start, end));
+        Collections.sort(result);
         return result;
     }
 

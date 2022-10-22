@@ -6,6 +6,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
 
 import javax.swing.JPanel;
 
@@ -20,7 +23,8 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 @SuppressWarnings("serial")
 public class MonthTestWeekHeaderPanel extends JPanel {
 
-	private String headerText;
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("EEE dd MMM");
+	
 	private final MonthTestWeekLayoutManager layoutManager;
 
 	/**
@@ -28,10 +32,9 @@ public class MonthTestWeekHeaderPanel extends JPanel {
 	 * 
 	 * @param headerText
 	 */
-	public MonthTestWeekHeaderPanel(final MonthTestWeekLayoutManager owner, final String headerText) {
+	public MonthTestWeekHeaderPanel(final MonthTestWeekLayoutManager owner) {
 		super(true);
 		setOpaque(false);
-		this.headerText = headerText;
 		this.layoutManager = owner;
 	}
 
@@ -51,41 +54,43 @@ public class MonthTestWeekHeaderPanel extends JPanel {
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 		final int height = getHeight();
 		final int width = getWidth();
-
+		
 		JCalendar calendar = layoutManager.getOwner();
 		CalendarConfig config = calendar.getConfig();
-
-		final boolean isToday = CalendarUtil.isToday(layoutManager.getDate());
-		final Color bgColor = isToday ? config.getTodayHeaderBackgroundColor() : config.getDayHeaderBackgroundColor();
-		final Color fgColor = isToday ? config.getTodayHeaderForegroundColor() : config.getDayHeaderForegroundColor();
-
 		
-		g2d.setColor(bgColor);
-		g2d.fillRect(0, 0, width, height);
-		
-		g2d.setColor(fgColor);
-		int fontSize = Math.round(height * 0.5f);
-		fontSize = fontSize > 12 ? 12 : fontSize;
+		//create the range
+		Collection<Date> list = CalendarUtil.getDatesSort(layoutManager.getStartRange(), layoutManager.getEndRange());
 
-		final Font font = new Font("Verdana", Font.PLAIN, fontSize);
-		final FontMetrics metrics = g2d.getFontMetrics(font);
-		g2d.setFont(font);
+		final int dayWidth = width/7;
+		int x = 0;		
+		for (Date actualDate : list) {
+			
+			final boolean isToday = CalendarUtil.isToday(actualDate);
+			final Color bgColor = isToday ? config.getTodayHeaderBackgroundColor() : config.getDayHeaderBackgroundColor();
+			final Color fgColor = isToday ? config.getTodayHeaderForegroundColor() : config.getDayHeaderForegroundColor();
 
-		g2d.drawString(headerText, 5, height / 2 + metrics.getHeight() / 2);
+			
+			g2d.setColor(bgColor);
+			g2d.fillRect(x, 0, dayWidth, height);
+			
+			g2d.setColor(fgColor);
+			int fontSize = Math.round(height * 0.5f);
+			fontSize = fontSize > 12 ? 12 : fontSize;
+
+			final Font font = new Font("Verdana", Font.PLAIN, fontSize);
+			final FontMetrics metrics = g2d.getFontMetrics(font);
+			g2d.setFont(font);
+
+			g2d.drawString(generateHeaderText(actualDate), x + 5, height / 2 + metrics.getHeight() / 2);	
+			
+			x = x + dayWidth;
+			
+		}
+
+	}
+	
+	private String generateHeaderText(Date date) {
+		return SDF.format(date);
 	}
 
-	/**
-	 * @return the headerText
-	 */
-	public String getHeaderText() {
-		return headerText;
-	}
-
-	/**
-	 * @param headerText
-	 *            the headerText to set
-	 */
-	public void setHeaderText(final String headerText) {
-		this.headerText = headerText;
-	}
 }
