@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarEvent;
 
@@ -135,6 +136,17 @@ public class CalendarUtil {
         Collections.sort(result);
         return result;
     }
+    
+    public static long daysBetween(Date start,Date end) {
+    	long dateBeforeInMs = start.getTime();
+    	long dateAfterInMs = end.getTime();
+    	long timeDiff = Math.abs(dateAfterInMs - dateBeforeInMs);
+    	return TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
+    }
+    
+    public static int amountOfDays(Date start,Date end) {
+    	return getDates(start, end).size();
+    }
 
     public static long getTotalSeconds(final Date date) {
         final Calendar c = CalendarUtil.getCalendar(date, false);
@@ -143,6 +155,8 @@ public class CalendarUtil {
         seconds += c.get(Calendar.SECOND);
         return seconds;
     }
+    
+
 
     public static int secondsToPixels(final Date date, final int maxHeight) {
         final long seconds = getTotalSeconds(date);

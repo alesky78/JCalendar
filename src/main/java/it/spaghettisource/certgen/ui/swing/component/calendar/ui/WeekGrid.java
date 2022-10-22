@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarEvent;
 import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 
 public class WeekGrid {
 
-	private Date[] index = new Date[7];
-	private ArrayList<CalendarEvent>[] grid  = new ArrayList[7];
+	private Date[] index;
+	private ArrayList<CalendarEvent>[] grid;
 	
 	public WeekGrid() {
+		index = new Date[7];
+		grid  = new ArrayList[7];
 	}
 
 	
@@ -85,6 +88,61 @@ public class WeekGrid {
 		return grid[index].get(position);
 	}
 	
+	public CalendarEvent findEventAtPosition(int xPosition, int yPosition) {
+		if(!isInitialized()) {
+			return null;
+		}
+		
+		if(grid[xPosition].size() <(yPosition+1)) {
+			return null;
+		}
+		
+		return grid[xPosition].get(yPosition);
+
+	}
+	
+	
+	/**
+	 * return all the event starting in this date,
+	 * if the date if the first day of the week and the event is starting before the first day, it is returned in the first day of the week
+	 * 
+	 * @param actualDate
+	 * @return
+	 */
+	public List<CalendarEvent> findEventStartingAtDate(Date actualDate) {
+		ArrayList<CalendarEvent> list =  new ArrayList();
+		
+		int listIndex = findIndex(actualDate);
+		if(listIndex==-1) {
+			return list;
+		}
+		
+		ArrayList<CalendarEvent> managedList = grid[listIndex];
+		
+		boolean firstDayOfWeek = actualDate.equals(index[0]) ? true:false;
+		
+		for (CalendarEvent calendarEvent : managedList) {
+			//skip empty element managed by the list
+			if(calendarEvent != null) {
+				
+				//if start in this day add it to the list
+				if(calendarEvent.getStart().equals(actualDate)) {
+					list.add(calendarEvent);
+				}
+
+				//if we are checking the first day of the week and it start before it add it
+				if(firstDayOfWeek) {
+					if(calendarEvent.getStart().before(index[0])) {
+						list.add(calendarEvent);
+					}
+				}
+			}
+		}
+		
+		return list;
+		
+	}
+	
 	
 	private boolean isPositionFree(int position,int firstIndex,int lastIndex) {
 		for (int i = firstIndex; i <= lastIndex; i++) {
@@ -140,6 +198,12 @@ public class WeekGrid {
 		}
 		return true;
 	}
+
+
+
+
+
+
 
 
 

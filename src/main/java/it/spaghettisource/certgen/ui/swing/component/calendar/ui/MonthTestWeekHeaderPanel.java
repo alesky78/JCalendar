@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JPanel;
@@ -58,9 +58,9 @@ public class MonthTestWeekHeaderPanel extends JPanel {
 		JCalendar calendar = layoutManager.getOwner();
 		CalendarConfig config = calendar.getConfig();
 		
-		//create the range
-		Collection<Date> list = CalendarUtil.getDatesSort(layoutManager.getStartRange(), layoutManager.getEndRange());
-
+		//create the range of dates
+		ArrayList<Date> list = CalendarUtil.getDatesSort(layoutManager.getStartRange(), layoutManager.getEndRange());
+		
 		final int dayWidth = width/7;
 		int x = 0;		
 		for (Date actualDate : list) {

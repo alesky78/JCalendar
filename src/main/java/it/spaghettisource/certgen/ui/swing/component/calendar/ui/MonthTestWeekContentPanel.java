@@ -7,9 +7,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -103,9 +104,17 @@ public class MonthTestWeekContentPanel extends JPanel {
 
     
     private CalendarEvent getEventFromrUI(final int x, final int y) {
-    	int position = (y + 2)/17; 
-    	CalendarEvent event = grid.findEventAtPosition(position,layoutManager.getStartRange());
+    	int xPosition = x/(getWidth()/7);
+    	
+    	if(xPosition>6) {
+    		//we are in the border of the panel
+    		return null;
+    	}
+    	
+    	int yPosition = (y + 2)/17; 
+    	CalendarEvent event = grid.findEventAtPosition(xPosition,yPosition);
     	return event;
+
     	
     }
     
@@ -125,14 +134,21 @@ public class MonthTestWeekContentPanel extends JPanel {
         final CalendarConfig config = calendar.getConfig();
         final Color dayDisableBackgroundColor = config.getDayDisabledBackgroundColor();
 
-        if (!isEnabled()) {
-            graphics2d.setColor(dayDisableBackgroundColor);
-            graphics2d.fillRect(0, 0, width, height);
-        }
+		final int dayWidth = width/7;
+		int x = 0;	
+		
+		for (int i = 0; i < 7; i++) {
+	        if (!isEnabled()) {
+	            graphics2d.setColor(dayDisableBackgroundColor);
+	            graphics2d.fillRect(x, 0, dayWidth, height);
+	        }
 
-        graphics2d.setColor(config.getLineColor());
-        graphics2d.drawRect(0, 0, width, height);
-
+	        graphics2d.setColor(config.getLineColor());
+	        graphics2d.drawRect(x, 0, dayWidth, height);
+			
+			x = x + dayWidth;
+		}
+        
     }
 
     
@@ -140,30 +156,28 @@ public class MonthTestWeekContentPanel extends JPanel {
     private void drawCalendarEvents(final Graphics2D graphics2d) {
 
     	AgendaModel model = layoutManager.getOwner().getModel();
-    	
-        final Collection<CalendarEvent> events = model.getEvents(layoutManager.getStartRange());        
-        
-        int pos = 2;
-        int offset = 0;
-        if (events.size() > 0) {
-        	
-            //prepare the grid
-        	Calendar temp = CalendarUtil.getCalendar(layoutManager.getStartRange(), true);
-        	temp.set(Calendar.DAY_OF_WEEK, layoutManager.getFirstDayOfWeek());	//set first day of week used by the strategy
-            Date startDate = temp.getTime();  
-        	
-            temp = CalendarUtil.getCalendar(startDate, true);
-            temp.add(Calendar.DAY_OF_MONTH, 6);
-            Date endDate = temp.getTime();
-            final Collection<CalendarEvent> allEvents = model.getEvents(startDate, endDate);
-            grid.populate(allEvents, startDate);
-        	
-        	
-            final CalendarConfig config = layoutManager.getOwner().getConfig();
-            for (final CalendarEvent event : events) {
+
+		//create the range of dates
+		ArrayList<Date> list = CalendarUtil.getDatesSort(layoutManager.getStartRange(), layoutManager.getEndRange());
+		
+		//populate the week greed
+	    final Collection<CalendarEvent> allEvents = model.getEvents(layoutManager.getStartRange(), layoutManager.getEndRange());
+        grid.populate(allEvents, layoutManager.getStartRange());
+    	        
+        final CalendarConfig config = layoutManager.getOwner().getConfig();
                 
-            	offset = grid.findPosition(event, layoutManager.getStartRange());
-            	pos = 2 + offset*17;
+		final int dayWidth = getWidth()/7;
+        int y = 2;
+        int x = 0;        
+        int offset = 0;
+        
+        for (Date actualDate : list) {
+        	List<CalendarEvent> actualEvents = grid.findEventStartingAtDate(actualDate);
+            
+            for (final CalendarEvent event : actualEvents) {
+                
+            	offset = grid.findPosition(event, actualDate);
+            	y = 2 + offset*17;
             	
                 Color bgColor = event.getType().getBackgroundColor();
                 bgColor = bgColor == null ? config.getEventDefaultBackgroundColor() : bgColor;
@@ -171,7 +185,7 @@ public class MonthTestWeekContentPanel extends JPanel {
                 fgColor = fgColor == null ? config.getEventDefaultForegroundColor() : fgColor;
                 graphics2d.setColor(!event.isSelected() ? bgColor : bgColor.darker().darker());
                 
-                graphics2d.fillRect(2, pos, getWidth() - 4, 15);
+                graphics2d.fillRoundRect(x+2, y, eventWidth(event,dayWidth)-2, 15, 10, 10);
 
                 final String eventString = event.getSummary();
                 int fontSize = Math.round(getHeight() * 0.5f);
@@ -182,10 +196,23 @@ public class MonthTestWeekContentPanel extends JPanel {
                 graphics2d.setFont(font);
 
                 graphics2d.setColor(!event.isSelected() ? fgColor : Color.white);
-                GraphicsUtil.drawTrimmedString(graphics2d, eventString, 6, pos+ (13 / 2 + metrics.getHeight() / 2) - 2, getWidth());
+                GraphicsUtil.drawTrimmedString(graphics2d, eventString, x + 6, y+ (13 / 2 + metrics.getHeight() / 2) - 2, getWidth());
 
             }
-        }
+            
+            x = x + dayWidth;
+
+        	
+		}
+        
+    }
+    
+    private int eventWidth(CalendarEvent event,int dayWidth) {
+
+    	Date start = event.getStart().before(layoutManager.getStartRange()) ? layoutManager.getStartRange() :  event.getStart();    	
+    	Date end = event.getEnd().after(layoutManager.getEndRange()) ? layoutManager.getEndRange() :  event.getEnd();
+    	
+    	return (dayWidth * CalendarUtil.amountOfDays(start, end));
     }
 
 
