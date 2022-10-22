@@ -28,7 +28,7 @@ class DisplayStrategyMonth implements DisplayStrategy {
     private final CalendarData data;    
   
 	
-    private final int WEEKS_PER_MONTH = 6;			//Amount of week to show
+    private final int WEEKS_PER_MONTH = 6;	//Amount of week to show
 	private final int FIRST_DAY_WEEK = 2;	//Calendar.MONDAY to use has first day of the week
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy");

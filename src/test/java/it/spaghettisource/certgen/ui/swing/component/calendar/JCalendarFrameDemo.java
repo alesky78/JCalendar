@@ -84,7 +84,6 @@ public class JCalendarFrameDemo extends JFrame {
 		toolBar.add(removeButton);
 		toolBar.add(modifyButton);
 
-
 		description = new JTextArea();
 		description.setLineWrap(true);
 		description.setRows(10);
@@ -148,22 +147,9 @@ public class JCalendarFrameDemo extends JFrame {
 
 				EventType type1 = new EventType();
 				type1.setBackgroundColor(Color.RED);
-				
-				EventType type2 = new EventType();
-				type2.setBackgroundColor(Color.GREEN);
-				
-				EventType type3 = new EventType();
-				type3.setBackgroundColor(Color.GRAY);
-				
-				int hour = 0;
-				int min = 0;
-				int day = 11;
-				int month = 10;
-				int year = 2022;
-				
-				Date start = CalendarUtil.createDate(year, month, day, hour, min, 0, 0);
-				Date end = CalendarUtil.createDate(year, month, day, hour+1 ,min+2, 0, 0);
-				CalendarEvent calendarEvent = new CalendarEvent("evento 1 ", start, end);
+						
+				Date start = new Date(System.currentTimeMillis());
+				CalendarEvent calendarEvent = new CalendarEvent("event added", start, start);
 				calendarEvent.setType(type1);
 				model.add(calendarEvent);
 
@@ -240,9 +226,7 @@ public class JCalendarFrameDemo extends JFrame {
 
 	}
 
-	public static void main(final String[] args) throws MalformedObjectNameException, NullPointerException,
-		InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
-		//Locale.setDefault(Locale.ITALIAN);
+	public static void main(final String[] args) {
 		final JCalendarFrameDemo frameTest = new JCalendarFrameDemo();
 		frameTest.setVisible(true);
 	}
