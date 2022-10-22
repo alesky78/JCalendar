@@ -3,7 +3,7 @@ JCalendar is a Java Swing Calendar component that allows you to represent data l
 
 this software is implemented using java Swing technology and is tested wiht the jvm version 1.8
   
-The actual actions imlpemented support all the crud operations on the event:
+The actual actions implemented support all the crud operations on the event:
 - add
 - modify
 - delete 
@@ -26,8 +26,8 @@ but in the test package it.spaghettisource.certgen.ui.swing.component.calendar
 you will find the class JCalendarDemo that run a prepared full example that use all the functionality of the component
 
 ## Note for the model
-The framework is shipped already with an in-memory model already implemented, but for a real UC a specific model to provide persistence must be implemented
-the class it.spaghettisource.certgen.ui.swing.component.calendar.model.AgendaModelMemory.java is the impementation of the in-memory and can be used as guide in the implmenetation of a model that support persistence (DB / file system)
+The framework is shipped already with an in-memory model already implemented, but for a real UC a specific model to provide persistence must be implemented.
+The class it.spaghettisource.certgen.ui.swing.component.calendar.model.AgendaModelMemory.java is the implementation of the in-memory and can be used as guide in the implementation of a model that support persistence (DB / file system)
  
  ## Screenshot
  Month view
