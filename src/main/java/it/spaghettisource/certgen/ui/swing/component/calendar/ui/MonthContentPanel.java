@@ -5,10 +5,12 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -16,30 +18,34 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.CalendarConfig;
 import it.spaghettisource.certgen.ui.swing.component.calendar.JCalendar;
 import it.spaghettisource.certgen.ui.swing.component.calendar.model.AgendaModel;
 import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarEvent;
+import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 import it.spaghettisource.certgen.ui.swing.component.calendar.util.GraphicsUtil;
+import it.spaghettisource.certgen.ui.swing.component.calendar.util.EventGrid;
 
 /** 
  * 
  * @author Alessandro D'Ottavio
  */
 @SuppressWarnings("serial")
-public class MonthDayContentPanel extends JPanel {
+public class MonthContentPanel extends JPanel {
     
-    private final MonthDayLayoutManager layoutManager;
+    private final MonthLayoutManager layoutManager;
+    private final EventGrid grid;
     
     /**
-     * Creates a new instance of {@link MonthDayContentPanel}
+     * Creates a new instance of {@link MonthContentPanel}
      */
-    public MonthDayContentPanel(final MonthDayLayoutManager owner) {
+    public MonthContentPanel(final MonthLayoutManager owner) {
         super(true);
         setOpaque(false);
         this.layoutManager = owner;
+        grid = new EventGrid();
         addEventSelectedListeners();
         addToolTipListner();
     }
     
 
-    public MonthDayLayoutManager getOwner() {
+    public MonthLayoutManager getOwner() {
         return layoutManager;
     }
     
@@ -82,7 +88,7 @@ public class MonthDayContentPanel extends JPanel {
     	
         addMouseMotionListener(new MouseAdapter() {
 
-            final JCalendar calendar = MonthDayContentPanel.this.layoutManager.getOwner();
+            final JCalendar calendar = MonthContentPanel.this.layoutManager.getOwner();
 
             @Override
             public void mouseMoved(final MouseEvent e) {
@@ -99,30 +105,18 @@ public class MonthDayContentPanel extends JPanel {
 
     
     private CalendarEvent getEventFromrUI(final int x, final int y) {
+    	int xPosition = x/(getWidth()/7);
     	
-        final Collection<CalendarEvent> events = layoutManager.getOwner().getModel().getEvents(layoutManager.getDate());
+    	if(xPosition>6) {
+    		//we are in the border of the panel
+    		return null;
+    	}
+    	
+    	int yPosition = (y + 2)/17; 
+    	CalendarEvent event = grid.findEventAtPosition(xPosition,yPosition);
+    	return event;
 
-        int pos = 2;
-        if (events.size() > 0) {
-            for (final CalendarEvent event : events) {
-
-                final int rectXStart = 2;
-                final int rectYStart = pos;
-
-                final int rectWidth = getWidth() - 4;
-
-                final int rectHeight = 15;
-
-                final Rectangle r = new Rectangle(rectXStart, rectYStart,rectWidth, rectHeight);
-                if (r.contains(x, y)) {
-                    return event;
-                }
-
-                pos += 17;
-
-            }
-        }
-        return null;
+    	
     }
     
     
@@ -141,30 +135,58 @@ public class MonthDayContentPanel extends JPanel {
         final CalendarConfig config = calendar.getConfig();
         final Color dayDisableBackgroundColor = config.getDayDisabledBackgroundColor();
 
-        if (!isEnabled()) {
-            graphics2d.setColor(dayDisableBackgroundColor);
-            graphics2d.fillRect(0, 0, width, height);
-        }
+		final int dayWidth = width/7;
+		int x = 0;	
+		
+		for (int i = 0; i < 7; i++) {
+	        if (!isEnabled()) {
+	            graphics2d.setColor(dayDisableBackgroundColor);
+	            graphics2d.fillRect(x, 0, dayWidth, height);
+	        }
 
-        graphics2d.setColor(config.getLineColor());
-        graphics2d.drawRect(0, 0, width, height);
-
+	        graphics2d.setColor(config.getLineColor());
+	        graphics2d.drawRect(x, 0, dayWidth, height);
+			
+			x = x + dayWidth;
+		}
+        
     }
 
+    
+    
     private void drawCalendarEvents(final Graphics2D graphics2d) {
 
-        final Collection<CalendarEvent> events = layoutManager.getOwner().getModel().getEvents(layoutManager.getDate());
-        int pos = 2;
-        if (events.size() > 0) {
-            final CalendarConfig config = layoutManager.getOwner().getConfig();
-            for (final CalendarEvent event : events) {
+    	AgendaModel model = layoutManager.getOwner().getModel();
+
+		//create the range of dates
+		ArrayList<Date> list = CalendarUtil.getDatesSort(layoutManager.getStartRange(), layoutManager.getEndRange());
+		
+		//populate the week greed
+	    final Collection<CalendarEvent> allEvents = model.getEvents(layoutManager.getStartRange(), layoutManager.getEndRange());
+        grid.populate(allEvents, layoutManager.getStartRange());
+    	        
+        final CalendarConfig config = layoutManager.getOwner().getConfig();
                 
+		final int dayWidth = getWidth()/7;
+        int y = 2;
+        int x = 0;        
+        int offset = 0;
+        
+        for (Date actualDate : list) {
+        	List<CalendarEvent> actualEvents = grid.findEventStartingAtDate(actualDate);
+            
+            for (final CalendarEvent event : actualEvents) {
+                
+            	offset = grid.findPosition(event, actualDate);
+            	y = 2 + offset*17;
+            	
                 Color bgColor = event.getType().getBackgroundColor();
                 bgColor = bgColor == null ? config.getEventDefaultBackgroundColor() : bgColor;
                 Color fgColor = event.getType().getForegroundColor();
                 fgColor = fgColor == null ? config.getEventDefaultForegroundColor() : fgColor;
                 graphics2d.setColor(!event.isSelected() ? bgColor : bgColor.darker().darker());
-                graphics2d.fillRect(2, pos, getWidth() - 4, 15);
+                
+                graphics2d.fillRoundRect(x+2, y, eventWidth(event,dayWidth)-2, 15, 10, 10);
 
                 final String eventString = event.getSummary();
                 int fontSize = Math.round(getHeight() * 0.5f);
@@ -175,11 +197,23 @@ public class MonthDayContentPanel extends JPanel {
                 graphics2d.setFont(font);
 
                 graphics2d.setColor(!event.isSelected() ? fgColor : Color.white);
-                GraphicsUtil.drawTrimmedString(graphics2d, eventString, 6, pos+ (13 / 2 + metrics.getHeight() / 2) - 2, getWidth());
+                GraphicsUtil.drawTrimmedString(graphics2d, eventString, x + 6, y+ (13 / 2 + metrics.getHeight() / 2) - 2, getWidth());
 
-                pos += 17;
             }
-        }
+            
+            x = x + dayWidth;
+
+        	
+		}
+        
+    }
+    
+    private int eventWidth(CalendarEvent event,int dayWidth) {
+
+    	Date start = event.getStart().before(layoutManager.getStartRange()) ? layoutManager.getStartRange() :  event.getStart();    	
+    	Date end = event.getEnd().after(layoutManager.getEndRange()) ? layoutManager.getEndRange() :  event.getEnd();
+    	
+    	return (dayWidth * CalendarUtil.amountOfDays(start, end));
     }
 
 

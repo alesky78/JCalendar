@@ -1,4 +1,4 @@
-package it.spaghettisource.certgen.ui.swing.component.calendar.ui;
+package it.spaghettisource.certgen.ui.swing.component.calendar.util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,16 +7,29 @@ import java.util.Date;
 import java.util.List;
 
 import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarEvent;
-import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 
-public class WeekGrid {
+/**
+ * This class create a grid of x days for all the event passed during the {@link #populate(Collection, Date)}} method.
+ * It is able to organize the event positioning in order like the classic agenda and expose all the method to analyze it.
+ * By default the empty parameter constructor initialize it to support 7 days, but it is possible use the customize  constructor to change the amount of managed days
+ * 
+ * @author Alessandro D'Ottavio
+ *
+ */
+public class EventGrid {
 
+	private int managedDays;
 	private Date[] index;
 	private ArrayList<CalendarEvent>[] grid;
 	
-	public WeekGrid() {
-		index = new Date[7];
-		grid  = new ArrayList[7];
+	public EventGrid() {
+		this(7);
+	}
+	
+	public EventGrid(int managedDays) {
+		this.managedDays = managedDays;
+		index = new Date[managedDays];
+		grid  = new ArrayList[managedDays];
 	}
 
 	
@@ -30,7 +43,7 @@ public class WeekGrid {
 		
 		//initialize the index data
     	Calendar day = CalendarUtil.getCalendar(start, true);
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < managedDays; i++) {
 			index[i] = day.getTime();
 			grid[i] = new ArrayList<>();
 			day.add(Calendar.DAY_OF_MONTH, 1);
@@ -73,19 +86,6 @@ public class WeekGrid {
 		}
 		
 		return -1;
-	}
-	
-	public CalendarEvent findEventAtPosition(int position, Date toCheck) {	
-		int index = findIndex(toCheck);
-		if(index==-1) {
-			return null;
-		}
-
-		if(grid[index].size() <(position+1)) {
-			return null;
-		}
-		
-		return grid[index].get(position);
 	}
 	
 	public CalendarEvent findEventAtPosition(int xPosition, int yPosition) {

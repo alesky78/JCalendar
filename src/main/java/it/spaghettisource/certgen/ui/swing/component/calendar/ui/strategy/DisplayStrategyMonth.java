@@ -12,7 +12,7 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.CalendarData;
 import it.spaghettisource.certgen.ui.swing.component.calendar.JCalendar;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.CalendarContentPanel;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.CalendarHeaderPanel;
-import it.spaghettisource.certgen.ui.swing.component.calendar.ui.MonthDayLayoutManager;
+import it.spaghettisource.certgen.ui.swing.component.calendar.ui.MonthLayoutManager;
 import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 
 /** 
@@ -28,15 +28,13 @@ class DisplayStrategyMonth implements DisplayStrategy {
     private final CalendarData data;    
   
 	
-    private final int gridRows = 6;
-    private final int gridColumns = 7;    
-	private final int daysPerMonth = gridRows*gridColumns;	//number of cell in the grid of the agenda
-	private final int firstDayOfWeek = 2;					//Calendar monday to use has first day of the week
+    private final int WEEKS_PER_MONTH = 6;			//Amount of week to show
+	private final int FIRST_DAY_WEEK = 2;	//Calendar.MONDAY to use has first day of the week
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy");
 
     private JPanel displayPanel;	//panel whit all the days cell
-    private final MonthDayLayoutManager[] days = new MonthDayLayoutManager[daysPerMonth];	//day cell
+    private final MonthLayoutManager[] days = new MonthLayoutManager[6];	//day cell
     
 
     public DisplayStrategyMonth(final JCalendar calendar, final CalendarContentPanel contentPane, final CalendarHeaderPanel headerPane, final CalendarData data) {
@@ -59,17 +57,17 @@ class DisplayStrategyMonth implements DisplayStrategy {
 
         displayPanel = new JPanel(true);
         displayPanel.setOpaque(false);
-        displayPanel.setLayout(new GridLayout(gridRows, gridColumns));
+        displayPanel.setLayout(new GridLayout(WEEKS_PER_MONTH, 1));
         final Calendar c = CalendarUtil.copyCalendar(start, true);
-        c.set(Calendar.DAY_OF_WEEK, firstDayOfWeek);
+        c.set(Calendar.DAY_OF_WEEK, FIRST_DAY_WEEK);
         
         data.setIntervalStart(CalendarUtil.copyCalendar(c, true));
         
-        for (int i = 0; i < daysPerMonth; i++) {
-            days[i] = new MonthDayLayoutManager(calendar, c.getTime(), 0.1f);
+        for (int i = 0; i < WEEKS_PER_MONTH; i++) {
+            days[i] = new MonthLayoutManager(calendar, c.getTime(), 0.1f,FIRST_DAY_WEEK);
             days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
             displayPanel.add(days[i].layout());
-            c.add(Calendar.DATE, 1);
+            c.add(Calendar.DATE, 7);
         }
        
         Calendar endInterval = CalendarUtil.copyCalendar(c, true);
@@ -141,14 +139,14 @@ class DisplayStrategyMonth implements DisplayStrategy {
 		data.setDate(CalendarUtil.copyCalendar(start, true));
 
         Calendar c = CalendarUtil.copyCalendar(start, true);
-        c.set(Calendar.DAY_OF_WEEK,firstDayOfWeek);
+        c.set(Calendar.DAY_OF_WEEK,FIRST_DAY_WEEK);
         
         data.setIntervalStart(CalendarUtil.copyCalendar(c, true));
         
-        for (int i = 0; i < daysPerMonth; i++) {
-            days[i].setDate(c.getTime());
+        for (int i = 0; i < WEEKS_PER_MONTH; i++) {
+            days[i].setStartRange(c.getTime());
             days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
-            c.add(Calendar.DATE, 1);
+            c.add(Calendar.DAY_OF_MONTH, 7);
         }
         
         Calendar endInterval = CalendarUtil.copyCalendar(c, true);

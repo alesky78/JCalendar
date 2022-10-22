@@ -3,44 +3,48 @@ package it.spaghettisource.certgen.ui.swing.component.calendar.ui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JPanel;
 
 import it.spaghettisource.certgen.ui.swing.component.calendar.JCalendar;
+import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 
 /** 
- * this class is the layout manager used by the Month strategy, it represent a single day in the grid of the calendar
+ * this class is the layout manager used by the Month strategy, it represent a full week in the grid of the calendar
  * 
  * 
  * @author Alessandro D'Ottavio
  */
-public class MonthTestDayLayoutManager {
+public class MonthLayoutManager {
 
-	private final SimpleDateFormat sdf = new SimpleDateFormat("EEE dd MMM");
+
 	
-	private Date day;	//day of this cell
+	private Date startRange;	//first date of the week
+	private Date endRange;		//last date of the week	
 	
-	private final MonthTestDayHeaderPanel headerPanel;
-	private final MonthTestDayContentPanel contentPanel;
+	private final MonthHeaderPanel headerPanel;
+	private final MonthContentPanel contentPanel;
 	private final JCalendar owner;
 	private float headerRatio = 0.0f;
 	private int firstDayOfWeek = 0;
 
 	/**
-	 * Creates a new instance of {@link MonthTestDayLayoutManager}
+	 * Creates a new instance of {@link MonthLayoutManager}
 	 * 
-	 * @param day
+	 * @param startRange
 	 * @param headerRatio
 	 */
-	public MonthTestDayLayoutManager(final JCalendar owner, final Date day,int firstDayOfWeek) {
+	public MonthLayoutManager(final JCalendar owner, final Date startRange,int firstDayOfWeek) {
 
-		this.day = day;
+		setStartRange(startRange);
+		
 		this.owner = owner;
-		this.headerPanel = new MonthTestDayHeaderPanel(this, sdf.format(day));
-		this.contentPanel = new MonthTestDayContentPanel(this);
+		this.headerPanel = new MonthHeaderPanel(this);
+		this.contentPanel = new MonthContentPanel(this);
 		this.firstDayOfWeek = firstDayOfWeek;
-
+		
 	}
 
 	/**
@@ -48,7 +52,7 @@ public class MonthTestDayLayoutManager {
 	 * @param day
 	 * @param headerRatio
 	 */
-	public MonthTestDayLayoutManager(final JCalendar owner, final Date day, final float headerRatio,int firstDayOfWeek) {
+	public MonthLayoutManager(final JCalendar owner, final Date day, final float headerRatio,int firstDayOfWeek) {
 
 		this(owner, day, firstDayOfWeek);
 		this.headerRatio = headerRatio;
@@ -79,19 +83,23 @@ public class MonthTestDayLayoutManager {
 	}
 
 	/**
-	 * @return the date
-	 */
-	public Date getDate() {
-		return day;
-	}
-
-	/**
 	 * @param date
 	 *            the date to set
 	 */
-	public void setDate(final Date date) {
-		this.day = date;
-		headerPanel.setHeaderText(sdf.format(date));
+	public void setStartRange(final Date startRange) {
+		this.startRange = startRange;
+		Calendar temp = CalendarUtil.getCalendar(startRange, true);
+		temp.add(Calendar.DAY_OF_MONTH, 6);
+		this.endRange = temp.getTime();
+
+	}
+	
+	public Date getStartRange() {
+		return startRange;
+	}
+
+	public Date getEndRange() {
+		return endRange;
 	}
 
 	public void setEnabled(final boolean enabled) {

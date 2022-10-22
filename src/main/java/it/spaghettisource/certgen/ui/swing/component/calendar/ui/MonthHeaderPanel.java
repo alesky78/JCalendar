@@ -21,18 +21,18 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
  * @author Alessandro D'Ottavio
  */
 @SuppressWarnings("serial")
-public class MonthTestWeekHeaderPanel extends JPanel {
+public class MonthHeaderPanel extends JPanel {
 
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("EEE dd MMM");
 	
-	private final MonthTestWeekLayoutManager layoutManager;
+	private final MonthLayoutManager layoutManager;
 
 	/**
-	 * Creates a new instance of {@link MonthTestWeekHeaderPanel}
+	 * Creates a new instance of {@link MonthHeaderPanel}
 	 * 
 	 * @param headerText
 	 */
-	public MonthTestWeekHeaderPanel(final MonthTestWeekLayoutManager owner) {
+	public MonthHeaderPanel(final MonthLayoutManager owner) {
 		super(true);
 		setOpaque(false);
 		this.layoutManager = owner;
@@ -43,7 +43,7 @@ public class MonthTestWeekHeaderPanel extends JPanel {
 	 * 
 	 * @return
 	 */
-	public MonthTestWeekLayoutManager getOwner() {
+	public MonthLayoutManager getOwner() {
 		return layoutManager;
 	}
 
