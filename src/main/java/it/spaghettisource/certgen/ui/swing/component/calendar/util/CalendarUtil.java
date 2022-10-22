@@ -23,6 +23,14 @@ public class CalendarUtil {
     public static boolean isSameDay(final Date date1, final Date date2) {
         return stripTime(date1).equals(stripTime(date2));
     }
+    
+    public static boolean isDayBefore(final Date date1, final Date date2) {
+        return stripTime(date1).before(stripTime(date2));
+    }
+    
+    public static boolean isDayAfter(final Date date1, final Date date2) {
+        return stripTime(date1).after(stripTime(date2));
+    }
 
     public static boolean isSameMonth(final Calendar c1, final Calendar c2) {
         return c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH);
