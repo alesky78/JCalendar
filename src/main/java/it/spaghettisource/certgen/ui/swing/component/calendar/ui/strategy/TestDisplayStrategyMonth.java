@@ -48,7 +48,7 @@ class TestDisplayStrategyMonth implements DisplayStrategy {
 
     @Override
     public DisplayStrategyType getType() {
-        return DisplayStrategyType.TEST;
+        return DisplayStrategyType.MONTH_TEST_DAY;
     }
     
     @Override

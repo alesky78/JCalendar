@@ -2,7 +2,7 @@ package it.spaghettisource.certgen.ui.swing.component.calendar.ui.strategy;
 
 public enum DisplayStrategyType {
 
-	MONTH("month"),TEST("test");
+	MONTH("month"),MONTH_TEST_DAY("monthTestDay");
 	
 	DisplayStrategyType(String i18n){
 		this.i18n = i18n;
