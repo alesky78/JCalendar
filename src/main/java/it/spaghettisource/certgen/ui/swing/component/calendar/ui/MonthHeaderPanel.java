@@ -66,8 +66,8 @@ public class MonthHeaderPanel extends JPanel {
 		for (Date actualDate : list) {
 			
 			final boolean isToday = CalendarUtil.isToday(actualDate);
-			final Color bgColor = isToday ? config.getTodayHeaderBackgroundColor() : config.getDayHeaderBackgroundColor();
-			final Color fgColor = isToday ? config.getTodayHeaderForegroundColor() : config.getDayHeaderForegroundColor();
+			final Color bgColor = isToday ? config.getTodayHeaderBackgroundColor() : config.getDefaultHeaderBackgroundColor();
+			final Color fgColor = isToday ? config.getTodayHeaderForegroundColor() : config.getDefaultHeaderForegroundColor();
 
 			
 			g2d.setColor(bgColor);

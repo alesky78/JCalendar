@@ -1,5 +1,6 @@
 package it.spaghettisource.certgen.ui.swing.component.calendar.model;
 
+import java.awt.Color;
 import java.util.Date;
 
 /** 
@@ -8,13 +9,15 @@ import java.util.Date;
  */
 public class CalendarEvent implements Comparable<CalendarEvent> {
 
+	private Color backgroundColor;
+	private Color foregroundColor;
+	
     private Date start;
     private Date end;
 	
     private String summary;
     private String description;
     private String location;
-    private EventType type;
 
     private boolean selected;
 
@@ -22,31 +25,24 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
      *
      */
     public CalendarEvent() {
-        type = new EventType();
     }
 
-    public CalendarEvent(final Date start, final Date end) {
+    public CalendarEvent(Date start, Date end) {
         this();
         this.start = start;
         this.end = end;
     }
 
-    public CalendarEvent(final String summary, final Date start, final Date end) {
+    public CalendarEvent(String summary, Date start, Date end) {
         this(start, end);
         this.summary = summary;
-        this.start = start;
-        this.end = end;
     }
-
-    public CalendarEvent(final Date start, final Date end, final EventType type) {
-        this(start, end);
-        this.type = type;
+    
+    public CalendarEvent(String summary, String description, Date start, Date end) {
+        this(summary, start, end);
+        this.description = description;
     }
-
-    public CalendarEvent(final String sumamry, final Date start, final Date end, final EventType type) {
-        this(sumamry, start, end);
-        this.type = type;
-    }
+    
 
     /**
      * @return the summary
@@ -117,22 +113,25 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
     public void setEnd(final Date end) {
         this.end = end;
     }
+    
+ 
+    public Color getBackgroundColor() {
+		return backgroundColor;
+	}
 
-    /**
-     * @return the type
-     */
-    public EventType getType() {
-        return type;
-    }
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
 
-    /**
-     * @param type the type to set
-     */
-    public void setType(final EventType type) {
-        this.type = type;
-    }
+	public Color getForegroundColor() {
+		return foregroundColor;
+	}
 
-    /**
+	public void setForegroundColor(Color foregroundColor) {
+		this.foregroundColor = foregroundColor;
+	}
+
+	/**
      * @return
      */
     public boolean isSelected() {
@@ -152,7 +151,6 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
         int result = 1;
         result = prime * result + ((end == null) ? 0 : end.hashCode());
         result = prime * result + ((start == null) ? 0 : start.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
 
@@ -175,11 +173,7 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
                 return false;
         } else if (!start.equals(other.start))
             return false;
-        if (type == null) {
-            if (other.type != null)
-                return false;
-        } else if (!type.equals(other.type))
-            return false;
+    	
         return true;
     }
 
@@ -193,7 +187,7 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
 
     @Override
     public String toString() {
-        return "CalendarEvent [start=" + start + ", end=" + end + ", type=" + type + "]";
+        return "CalendarEvent [start=" + start + ", end=" + end + ", summary=" + summary + "]";
     }
 
 

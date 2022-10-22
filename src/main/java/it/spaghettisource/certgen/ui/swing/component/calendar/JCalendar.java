@@ -34,18 +34,26 @@ public class JCalendar extends JPanel {
     
 	private DisplayStrategy strategy;
     
-    private AgendaModel model;	//model data of the agenda
-
+    private AgendaModel model;
 
     public JCalendar() {
-    	this(new AgendaModelMemory());
+    	this(new AgendaModelMemory(),new CalendarConfig());
+    }
+    
+    public JCalendar(CalendarConfig config) {
+    	this(new AgendaModelMemory(),config);
     }
     
     public JCalendar(AgendaModel model) {
-        config = new CalendarConfig();
+    	this(model,new CalendarConfig());
+    }
+    
+    public JCalendar(AgendaModel model, CalendarConfig config) {
+
         data = new CalendarData(Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance());
         formater = new CalendarEventFormatDefault();
 
+        this.config = config;
         this.model = model;
         model.setParent(this);
         

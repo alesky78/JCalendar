@@ -134,6 +134,7 @@ public class MonthContentPanel extends JPanel {
         final JCalendar calendar = layoutManager.getOwner();
         final CalendarConfig config = calendar.getConfig();
         final Color dayDisableBackgroundColor = config.getDayDisabledBackgroundColor();
+        final Color dayDefaultBackgroundColor = config.getDayDefaultBackgroundColor();
 
 		final int dayWidth = width/7;
 		int x = 0;	
@@ -141,6 +142,9 @@ public class MonthContentPanel extends JPanel {
 		for (int i = 0; i < 7; i++) {
 	        if (!isEnabled()) {
 	            graphics2d.setColor(dayDisableBackgroundColor);
+	            graphics2d.fillRect(x, 0, dayWidth, height);
+	        }else {
+	        	graphics2d.setColor(dayDefaultBackgroundColor);
 	            graphics2d.fillRect(x, 0, dayWidth, height);
 	        }
 
@@ -180,9 +184,9 @@ public class MonthContentPanel extends JPanel {
             	offset = grid.findPosition(event, actualDate);
             	y = 2 + offset*17;
             	
-                Color bgColor = event.getType().getBackgroundColor();
+                Color bgColor = event.getBackgroundColor();
                 bgColor = bgColor == null ? config.getEventDefaultBackgroundColor() : bgColor;
-                Color fgColor = event.getType().getForegroundColor();
+                Color fgColor = event.getForegroundColor();
                 fgColor = fgColor == null ? config.getEventDefaultForegroundColor() : fgColor;
                 graphics2d.setColor(!event.isSelected() ? bgColor : bgColor.darker().darker());
                 

@@ -8,28 +8,38 @@ import java.awt.Color;
  */
 public class CalendarConfig {
 
+	
     private Color lineColor;
-    private Color dayHeaderForegroundColor;
-    private Color dayHeaderBackgroundColor;
+    
+    //Colors used by the header of 
+    private Color defaultHeaderForegroundColor;
+    private Color defaultHeaderBackgroundColor;
     private Color todayHeaderForegroundColor;
     private Color todayHeaderBackgroundColor;
+
+    //Colors used by the events
     private Color eventDefaultBackgroundColor;
     private Color eventDefaultForegroundColor;
+    
+    //Colors used by the days    
     private Color dayDisabledBackgroundColor;
+    private Color dayDefaultBackgroundColor;    
     
     public CalendarConfig() {
         lineColor = new Color(220, 220, 220);
 
         todayHeaderBackgroundColor = new Color(240, 230, 140, 128);
-        dayHeaderBackgroundColor = new Color(173, 216, 230, 200);
+        //defaultHeaderBackgroundColor = new Color(173, 216, 230, 200);
+        defaultHeaderBackgroundColor = new Color(173, 216, 230, 200);
 
-        todayHeaderForegroundColor = Color.black;
-        dayHeaderForegroundColor = Color.black;
+        todayHeaderForegroundColor = Color.BLACK;
+        defaultHeaderForegroundColor = Color.BLACK;
 
         eventDefaultBackgroundColor = new Color(135, 184, 217, 128);
         eventDefaultForegroundColor = Color.DARK_GRAY;
 
         dayDisabledBackgroundColor = new Color(148, 197, 217, 128);
+        dayDefaultBackgroundColor = Color.WHITE;
     }
 
     public Color getLineColor() {
@@ -40,24 +50,23 @@ public class CalendarConfig {
         this.lineColor = lineColor;
     }
 
+	public Color getDefaultHeaderForegroundColor() {
+		return defaultHeaderForegroundColor;
+	}
 
-    public Color getDayHeaderBackgroundColor() {
-        return dayHeaderBackgroundColor;
-    }
+	public void setDefaultHeaderForegroundColor(Color defaultHeaderForegroundColor) {
+		this.defaultHeaderForegroundColor = defaultHeaderForegroundColor;
+	}
 
-    public void setDayHeaderBackgroundColor(Color dayHeaderBackgroundColor) {
-        this.dayHeaderBackgroundColor = dayHeaderBackgroundColor;
-    }
+	public Color getDefaultHeaderBackgroundColor() {
+		return defaultHeaderBackgroundColor;
+	}
 
-    public Color getDayHeaderForegroundColor() {
-        return dayHeaderForegroundColor;
-    }
+	public void setDefaultHeaderBackgroundColor(Color defaultHeaderBackgroundColor) {
+		this.defaultHeaderBackgroundColor = defaultHeaderBackgroundColor;
+	}
 
-    public void setDayHeaderForegroundColor(Color dayHeaderForegroundColor) {
-        this.dayHeaderForegroundColor = dayHeaderForegroundColor;
-    }
-
-    public Color getTodayHeaderBackgroundColor() {
+	public Color getTodayHeaderBackgroundColor() {
         return todayHeaderBackgroundColor;
     }
 
@@ -97,5 +106,12 @@ public class CalendarConfig {
         this.dayDisabledBackgroundColor = dayDisabledBackgroundColor;
     }
 
+	public Color getDayDefaultBackgroundColor() {
+		return dayDefaultBackgroundColor;
+	}
+
+	public void setDayDefaultBackgroundColor(Color dayDefaultBackgroundColor) {
+		this.dayDefaultBackgroundColor = dayDefaultBackgroundColor;
+	}
     
 }
