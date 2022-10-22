@@ -12,14 +12,14 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.CalendarData;
 import it.spaghettisource.certgen.ui.swing.component.calendar.JCalendar;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.CalendarContentPanel;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.CalendarHeaderPanel;
-import it.spaghettisource.certgen.ui.swing.component.calendar.ui.TestMonthDayLayoutManager;
+import it.spaghettisource.certgen.ui.swing.component.calendar.ui.MonthTestDayLayoutManager;
 import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 
 /** 
  * 
  * @author Alessandro D'Ottavio
  */
-class TestDisplayStrategyMonth implements DisplayStrategy {
+class DisplayStrategyMonthTestDay implements DisplayStrategy {
 	
 	private final JCalendar calendar;
     private final CalendarContentPanel contentPane;  
@@ -36,10 +36,10 @@ class TestDisplayStrategyMonth implements DisplayStrategy {
     private final SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy");
 
     private JPanel displayPanel;	//panel whit all the days cell
-    private final TestMonthDayLayoutManager[] days = new TestMonthDayLayoutManager[daysPerMonth];	//day cell
+    private final MonthTestDayLayoutManager[] days = new MonthTestDayLayoutManager[daysPerMonth];	//day cell
     
 
-    public TestDisplayStrategyMonth(final JCalendar calendar, final CalendarContentPanel contentPane, final CalendarHeaderPanel headerPane, final CalendarData data) {
+    public DisplayStrategyMonthTestDay(final JCalendar calendar, final CalendarContentPanel contentPane, final CalendarHeaderPanel headerPane, final CalendarData data) {
     	this.calendar = calendar;
     	this.headerPane = headerPane;
         this.contentPane = contentPane;
@@ -66,7 +66,7 @@ class TestDisplayStrategyMonth implements DisplayStrategy {
         data.setIntervalStart(CalendarUtil.copyCalendar(c, true));
         
         for (int i = 0; i < daysPerMonth; i++) {
-            days[i] = new TestMonthDayLayoutManager(calendar, c.getTime(), 0.1f,firstDayOfWeek);
+            days[i] = new MonthTestDayLayoutManager(calendar, c.getTime(), 0.1f,firstDayOfWeek);
             days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
             displayPanel.add(days[i].layout());
             c.add(Calendar.DATE, 1);

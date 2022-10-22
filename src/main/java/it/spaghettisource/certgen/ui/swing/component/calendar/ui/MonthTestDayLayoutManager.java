@@ -15,30 +15,30 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.JCalendar;
  * 
  * @author Alessandro D'Ottavio
  */
-public class TestMonthDayLayoutManager {
+public class MonthTestDayLayoutManager {
 
 	private final SimpleDateFormat sdf = new SimpleDateFormat("EEE dd MMM");
 	
 	private Date day;	//day of this cell
 	
-	private final TestMonthDayHeaderPanel headerPanel;
-	private final TestMonthDayContentPanel contentPanel;
+	private final MonthTestDayHeaderPanel headerPanel;
+	private final MonthTestDayContentPanel contentPanel;
 	private final JCalendar owner;
 	private float headerRatio = 0.0f;
 	private int firstDayOfWeek = 0;
 
 	/**
-	 * Creates a new instance of {@link TestMonthDayLayoutManager}
+	 * Creates a new instance of {@link MonthTestDayLayoutManager}
 	 * 
 	 * @param day
 	 * @param headerRatio
 	 */
-	public TestMonthDayLayoutManager(final JCalendar owner, final Date day,int firstDayOfWeek) {
+	public MonthTestDayLayoutManager(final JCalendar owner, final Date day,int firstDayOfWeek) {
 
 		this.day = day;
 		this.owner = owner;
-		this.headerPanel = new TestMonthDayHeaderPanel(this, sdf.format(day));
-		this.contentPanel = new TestMonthDayContentPanel(this);
+		this.headerPanel = new MonthTestDayHeaderPanel(this, sdf.format(day));
+		this.contentPanel = new MonthTestDayContentPanel(this);
 		this.firstDayOfWeek = firstDayOfWeek;
 
 	}
@@ -48,7 +48,7 @@ public class TestMonthDayLayoutManager {
 	 * @param day
 	 * @param headerRatio
 	 */
-	public TestMonthDayLayoutManager(final JCalendar owner, final Date day, final float headerRatio,int firstDayOfWeek) {
+	public MonthTestDayLayoutManager(final JCalendar owner, final Date day, final float headerRatio,int firstDayOfWeek) {
 
 		this(owner, day, firstDayOfWeek);
 		this.headerRatio = headerRatio;

@@ -21,7 +21,7 @@ public class DisplayStrategyFactory {
 				strategy.init();
 				return strategy;
 			case MONTH_TEST_DAY:
-				strategy = new TestDisplayStrategyMonth(calendar,contentPane,headerPane,data);
+				strategy = new DisplayStrategyMonthTestDay(calendar,contentPane,headerPane,data);
 				strategy.init();
 				return strategy;
 	

@@ -26,15 +26,15 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.util.GraphicsUtil;
  * @author Alessandro D'Ottavio
  */
 @SuppressWarnings("serial")
-public class TestMonthDayContentPanel extends JPanel {
+public class MonthTestDayContentPanel extends JPanel {
     
-    private final TestMonthDayLayoutManager layoutManager;
+    private final MonthTestDayLayoutManager layoutManager;
     private final WeekGrid grid;
     
     /**
-     * Creates a new instance of {@link TestMonthDayContentPanel}
+     * Creates a new instance of {@link MonthTestDayContentPanel}
      */
-    public TestMonthDayContentPanel(final TestMonthDayLayoutManager owner) {
+    public MonthTestDayContentPanel(final MonthTestDayLayoutManager owner) {
         super(true);
         setOpaque(false);
         this.layoutManager = owner;
@@ -44,7 +44,7 @@ public class TestMonthDayContentPanel extends JPanel {
     }
     
 
-    public TestMonthDayLayoutManager getOwner() {
+    public MonthTestDayLayoutManager getOwner() {
         return layoutManager;
     }
     
@@ -87,7 +87,7 @@ public class TestMonthDayContentPanel extends JPanel {
     	
         addMouseMotionListener(new MouseAdapter() {
 
-            final JCalendar calendar = TestMonthDayContentPanel.this.layoutManager.getOwner();
+            final JCalendar calendar = MonthTestDayContentPanel.this.layoutManager.getOwner();
 
             @Override
             public void mouseMoved(final MouseEvent e) {
