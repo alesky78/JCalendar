@@ -69,8 +69,8 @@ public class JCalendarFrameDemo extends JFrame {
 	public JCalendarFrameDemo() {
 
 		initGui();
-		initData();
 		bindListeners();
+		initData();
 
 	}
 
@@ -123,22 +123,20 @@ public class JCalendarFrameDemo extends JFrame {
 
 		CalendarEvent calendarEvent;
 		
-		//create 1000 random events
-//		for (int i = 0; i < 500; i++) {
-//			int hour = r.nextInt(19);
-//			hour = hour > 17 ? 17 : hour;
-//			hour = hour < 8 ? 8 : hour;
-//			final int min = r.nextInt(60);
-//			final int day = r.nextInt(29);
-//			final int month = r.nextInt(12);
-//			final int year = 2022;
-//	
-//			final Date start = CalendarUtil.createDate(year, month, day, hour, min, 0, 0);
-//			final Date end = CalendarUtil.createDate(year, month, day, hour + 1 + r.nextInt(4), r.nextInt(59), 0, 0);
-//			calendarEvent = new CalendarEvent(names[r.nextInt(3)], start, end);
-//			calendarEvent.setType(types[r.nextInt(3)]);
-//			jCalendar.addCalendarEvent(calendarEvent);
-//		}
+		//create random events
+		for (int i = 0; i < 200; i++) {
+			int hour = r.nextInt(19);
+			final int min = r.nextInt(60);
+			final int day = r.nextInt(29);
+			final int month = r.nextInt(12);
+			final int year = 2022;
+	
+			final Date start = CalendarUtil.createDate(year, month, day, hour, min, 0, 0);
+			final Date end = CalendarUtil.createDate(year, month, day+r.nextInt(4), hour + 1 + r.nextInt(4), r.nextInt(59), 0, 0);
+			calendarEvent = new CalendarEvent(names[r.nextInt(3)], start, end);
+			calendarEvent.setType(types[r.nextInt(3)]);
+			model.add(calendarEvent);
+		}
 
 	}
 
@@ -162,29 +160,13 @@ public class JCalendarFrameDemo extends JFrame {
 				int day = 11;
 				int month = 10;
 				int year = 2022;
+				
 				Date start = CalendarUtil.createDate(year, month, day, hour, min, 0, 0);
-				Date end = CalendarUtil.createDate(year, month, day+1, hour ,min, 0, 0);
+				Date end = CalendarUtil.createDate(year, month, day, hour+1 ,min+2, 0, 0);
 				CalendarEvent calendarEvent = new CalendarEvent("evento 1 ", start, end);
 				calendarEvent.setType(type1);
 				model.add(calendarEvent);
-				
-				start = CalendarUtil.createDate(year, month, day+1, hour, min, 0, 0);
-				end = CalendarUtil.createDate(year, month, day+2, hour+1 ,min, 0, 0);
-				calendarEvent = new CalendarEvent("evento 2", start, end);
-				calendarEvent.setType(type2);
-				model.add(calendarEvent);
-				
-				start = CalendarUtil.createDate(year, month, day+2, hour, min, 0, 0);
-				end = CalendarUtil.createDate(year, month, day+3, hour+1 ,min, 0, 0);
-				calendarEvent = new CalendarEvent("evento 3", start, end);
-				calendarEvent.setType(type3);
-				model.add(calendarEvent);	
-				
-				start = CalendarUtil.createDate(year, month, day+2, hour, min, 0, 0);
-				end = CalendarUtil.createDate(year, month, day+6, hour+1 ,min, 0, 0);
-				calendarEvent = new CalendarEvent("evento 3", start, end);
-				calendarEvent.setType(type3);
-				model.add(calendarEvent);	
+
 				
 				
 			}

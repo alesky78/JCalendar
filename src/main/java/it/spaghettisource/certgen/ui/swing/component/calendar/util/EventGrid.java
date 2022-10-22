@@ -126,21 +126,23 @@ public class EventGrid {
 			if(calendarEvent != null) {
 				
 				//if start in this day add it to the list
-				if(calendarEvent.getStart().equals(actualDate)) {
+				if(CalendarUtil.isSameDay(calendarEvent.getStart(),actualDate)) {									
 					list.add(calendarEvent);
 				}
 
 				//if we are checking the first day of the week and it start before it add it
 				if(firstDayOfWeek) {
-					if(calendarEvent.getStart().before(index[0])) {
-						list.add(calendarEvent);
+					if(CalendarUtil.isDayBefore(calendarEvent.getStart(),actualDate)) {	
+						if(calendarEvent.getStart().before(index[0])) {
+							list.add(calendarEvent);
+						}
 					}
 				}
+				
 			}
 		}
 		
 		return list;
-		
 	}
 	
 	
