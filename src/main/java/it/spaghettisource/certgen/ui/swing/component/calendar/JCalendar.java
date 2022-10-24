@@ -28,7 +28,7 @@ public class JCalendar extends JPanel {
     private CalendarHeaderPanel headerPane;
     private CalendarContentPanel contentPane;
     
-    private CalendarData data;
+    private CalendarState state;
     private CalendarConfig config;
     private CalendarEventFormat formater;
     
@@ -50,7 +50,7 @@ public class JCalendar extends JPanel {
     
     public JCalendar(AgendaModel model, CalendarConfig config) {
 
-        data = new CalendarData(Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance());
+        state = new CalendarState(Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance());
         formater = new CalendarEventFormatDefault();
 
         this.config = config;
@@ -69,7 +69,7 @@ public class JCalendar extends JPanel {
         headerPane = new CalendarHeaderPanel();
         contentPane = new CalendarContentPanel();
         
-		strategy = DisplayStrategyFactory.buildStrategyByType(this, contentPane, headerPane, DisplayStrategyType.MONTH, data);
+		strategy = DisplayStrategyFactory.buildStrategyByType(this, contentPane, headerPane, DisplayStrategyType.MONTH, state);
 		strategy.displayContentPanel();
 		strategy.displayHeaderPanel();
         
@@ -155,7 +155,7 @@ public class JCalendar extends JPanel {
      */
     public void setDisplayStrategy(DisplayStrategyType strategyType) {
     	
-		strategy = DisplayStrategyFactory.buildStrategyByType(this, contentPane, headerPane, strategyType, data);
+		strategy = DisplayStrategyFactory.buildStrategyByType(this, contentPane, headerPane, strategyType, state);
 		strategy.displayContentPanel();
 		strategy.displayHeaderPanel();
     	

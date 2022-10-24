@@ -8,7 +8,7 @@ import java.util.Date;
 
 import javax.swing.JPanel;
 
-import it.spaghettisource.certgen.ui.swing.component.calendar.CalendarData;
+import it.spaghettisource.certgen.ui.swing.component.calendar.CalendarState;
 import it.spaghettisource.certgen.ui.swing.component.calendar.JCalendar;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.CalendarContentPanel;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.CalendarHeaderPanel;
@@ -25,7 +25,7 @@ class DisplayStrategyMonth implements DisplayStrategy {
     private final CalendarContentPanel contentPane;  
     private final CalendarHeaderPanel headerPane;
     
-    private final CalendarData data;    
+    private final CalendarState state;    
   
 	
     private final int WEEKS_PER_MONTH = 6;	//Amount of week to show
@@ -37,11 +37,11 @@ class DisplayStrategyMonth implements DisplayStrategy {
     private final MonthLayoutManager[] days = new MonthLayoutManager[6];	//day cell
     
 
-    public DisplayStrategyMonth(final JCalendar calendar, final CalendarContentPanel contentPane, final CalendarHeaderPanel headerPane, final CalendarData data) {
+    public DisplayStrategyMonth(final JCalendar calendar, final CalendarContentPanel contentPane, final CalendarHeaderPanel headerPane, final CalendarState state) {
     	this.calendar = calendar;
     	this.headerPane = headerPane;
         this.contentPane = contentPane;
-        this.data = data;
+        this.state = state;
     }
 
     @Override
@@ -52,7 +52,7 @@ class DisplayStrategyMonth implements DisplayStrategy {
     @Override
     public void init() {
 
-    	Calendar start = CalendarUtil.copyCalendar(data.getDate(), true);
+    	Calendar start = CalendarUtil.copyCalendar(state.getDate(), true);
         start.set(Calendar.DAY_OF_MONTH, 1);
 
         displayPanel = new JPanel(true);
@@ -61,7 +61,7 @@ class DisplayStrategyMonth implements DisplayStrategy {
         final Calendar c = CalendarUtil.copyCalendar(start, true);
         c.set(Calendar.DAY_OF_WEEK, FIRST_DAY_WEEK);
         
-        data.setIntervalStart(CalendarUtil.copyCalendar(c, true));
+        state.setIntervalStart(CalendarUtil.copyCalendar(c, true));
         
         for (int i = 0; i < WEEKS_PER_MONTH; i++) {
             days[i] = new MonthLayoutManager(calendar, c.getTime(), 0.1f,FIRST_DAY_WEEK);
@@ -73,9 +73,9 @@ class DisplayStrategyMonth implements DisplayStrategy {
         Calendar endInterval = CalendarUtil.copyCalendar(c, true);
         endInterval.add(Calendar.DAY_OF_MONTH, -1);
         
-        data.setIntervalEnd(CalendarUtil.copyCalendar(endInterval, true));
+        state.setIntervalEnd(CalendarUtil.copyCalendar(endInterval, true));
         
-        calendar.getModel().intervalChange(data.getIntervalStart().getTime(), data.getIntervalEnd().getTime());
+        calendar.getModel().intervalChange(state.getIntervalStart().getTime(), state.getIntervalEnd().getTime());
 
     }
 
@@ -96,7 +96,7 @@ class DisplayStrategyMonth implements DisplayStrategy {
 	
     @Override
     public void moveIntervalLeft() {
-        Calendar start = CalendarUtil.copyCalendar(data.getDate(), true);
+        Calendar start = CalendarUtil.copyCalendar(state.getDate(), true);
 
         start.add(Calendar.MONTH, -1);
         start.set(Calendar.DAY_OF_MONTH, 1);
@@ -110,7 +110,7 @@ class DisplayStrategyMonth implements DisplayStrategy {
 
     @Override
     public void moveIntervalRight() {
-        Calendar start = CalendarUtil.copyCalendar(data.getDate(), true);
+        Calendar start = CalendarUtil.copyCalendar(state.getDate(), true);
 
         start.add(Calendar.MONTH, 1);
         start.set(Calendar.DAY_OF_MONTH, 1);
@@ -136,12 +136,12 @@ class DisplayStrategyMonth implements DisplayStrategy {
 
 	private void moveInterval(Calendar start, Calendar end) {
 		
-		data.setDate(CalendarUtil.copyCalendar(start, true));
+		state.setDate(CalendarUtil.copyCalendar(start, true));
 
         Calendar c = CalendarUtil.copyCalendar(start, true);
         c.set(Calendar.DAY_OF_WEEK,FIRST_DAY_WEEK);
         
-        data.setIntervalStart(CalendarUtil.copyCalendar(c, true));
+        state.setIntervalStart(CalendarUtil.copyCalendar(c, true));
         
         for (int i = 0; i < WEEKS_PER_MONTH; i++) {
             days[i].setStartRange(c.getTime());
@@ -152,16 +152,16 @@ class DisplayStrategyMonth implements DisplayStrategy {
         Calendar endInterval = CalendarUtil.copyCalendar(c, true);
         endInterval.add(Calendar.DAY_OF_MONTH, -1);
         
-        data.setIntervalEnd(CalendarUtil.copyCalendar(endInterval, true));
+        state.setIntervalEnd(CalendarUtil.copyCalendar(endInterval, true));
 
         changeHeaderInterval();
         
-        calendar.getModel().intervalChange(data.getIntervalStart().getTime(), data.getIntervalEnd().getTime());
+        calendar.getModel().intervalChange(state.getIntervalStart().getTime(), state.getIntervalEnd().getTime());
         
 	}
 	
 	private void changeHeaderInterval() {
-		Calendar c = CalendarUtil.copyCalendar(data.getDate(), true);
+		Calendar c = CalendarUtil.copyCalendar(state.getDate(), true);
         String interval = sdf.format(c.getTime());
         headerPane.getIntervalLabel().setText(interval);
 	}

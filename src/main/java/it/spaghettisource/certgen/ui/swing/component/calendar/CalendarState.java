@@ -3,18 +3,18 @@ package it.spaghettisource.certgen.ui.swing.component.calendar;
 import java.util.Calendar;
 
 /**
- * store the data for the management of the calendar but are not part of the Model 
+ * store the state data for the management of the calendar component 
  * 
  * 
  * @author Alessandro D'Ottavio
  */
-public class CalendarData {
+public class CalendarState {
 	
 	private Calendar date;			//represent the exact date for which is requested the calendar	
     private Calendar intervalStart;	//represent the first date show in the calendar based on the strategy
     private Calendar intervalEnd;	//represent the last date show in the calendar based on the strategy
 
-    public CalendarData(Calendar date, Calendar intervalStart, Calendar intervalEnd) {
+    public CalendarState(Calendar date, Calendar intervalStart, Calendar intervalEnd) {
 		super();
 		this.date = date;
 		this.intervalStart = intervalStart;
