@@ -20,12 +20,10 @@ But that was a demo with several limitation like:
 
 ## How to use
 this is a short introduction, doesn't intend to give a full details on the way how to use it, 
-but in the test package it.spaghettisource.certgen.ui.swing.component.calendar
-you will find the class JCalendarDemo that run a prepared full example that use all the functionality of the component
+but in the test package you will find the class JCalendarDemo that run a prepared full example that use all the functionality of the component
 
 ## Note for the model
-The framework is shipped already with an in-memory model already implemented, but for a real UC a specific model to provide persistence must be implemented.
-The class it.spaghettisource.certgen.ui.swing.component.calendar.model.AgendaModelMemory.java is the implementation of the in-memory and can be used as guide in the implementation of a model that support persistence (DB / file system)
+The framework is shipped already with an in-memory model already implemented, but for a real UC a specific model that provide persistence pobably should be implemented. The class AgendaModelMemory is the in-memory implementation and can be used as guide in the implementation of a model that support real persistence
  
  ## Screenshot
  Month view
