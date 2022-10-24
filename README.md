@@ -13,7 +13,7 @@ The UI actually support only the Month view, but:
 
 Many thanks to theodorcostache that implemented the first version and put a lot of good ideas on its implementation (that can be found here https://github.com/theodorcostache/java-swing-calendar).
 But that was a demo with several limitation like:
- - not supported in the UI event with multiple days! (event longer then 1 doy is show as one-day event) 
+ - not supported in the UI event with multiple days! (event longer then 1 day, it is show as one-day event) 
  - not present a injectable standard model class like in the standard swing component
  - the listener was managed at high level classes and the model was not always involved
  - the state of the components was stored in singletor with potential memory leak during the dispose of the component becouse you have to clean the memory manually
