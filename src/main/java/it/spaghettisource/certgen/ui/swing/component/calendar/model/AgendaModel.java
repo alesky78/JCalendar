@@ -24,11 +24,12 @@ public interface AgendaModel {
 	
 	public void update(CalendarEvent event);	
 
-	public void addSelected(CalendarEvent event);
+	public void addSelected(Date exactDate,CalendarEvent event);
+	
+	public void cleanSelected(Date exactDate);
 	
 	public CalendarEvent getSelected();
 
-	public void cleanSelected();
 	
 	public Collection<CalendarEvent> getEvents(Date date);
 	

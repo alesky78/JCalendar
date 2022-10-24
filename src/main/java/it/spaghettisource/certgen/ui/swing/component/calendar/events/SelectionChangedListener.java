@@ -6,5 +6,6 @@ public interface SelectionChangedListener extends EventListener {
 
 	public void selectionChanged(SelectionChangedEvent event);
 	
-	public void selectionClean();
+	public void selectionClean(SelectionChangedEvent event);
+	
 }

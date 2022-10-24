@@ -29,6 +29,7 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.util.EventGrid;
 @SuppressWarnings("serial")
 public class MonthContentPanel extends JPanel {
     
+	private final int MANAGED_DAYS = 7;	
     private final MonthLayoutManager layoutManager;
     private final EventGrid grid;
     
@@ -39,7 +40,7 @@ public class MonthContentPanel extends JPanel {
         super(true);
         setOpaque(false);
         this.layoutManager = owner;
-        grid = new EventGrid();
+        grid = new EventGrid(MANAGED_DAYS);
         addEventSelectedListeners();
         addToolTipListner();
     }
@@ -63,17 +64,22 @@ public class MonthContentPanel extends JPanel {
             public void mousePressed(final MouseEvent e) {
 
                 final CalendarEvent event = getEventFromrUI(e.getX(), e.getY());
+                final Date date = getDateFromrUI(e.getX(), e.getY());
 
                 if (e.getClickCount() == 1) {
+                	
+                	if(event!=null || date!=null) {	//if this condition is not satisfied we are in the border of the panel and we cannot identify correctly events
+                        final AgendaModel events = calendar.getModel();
+                        
+                        if (event != null) {
+                            event.setSelected(true);
+                            events.addSelected(date,event);
+                        }else {
+                        	events.cleanSelected(date);
+                        }                		
+                	}
+                	
 
-                    final AgendaModel events = calendar.getModel();
-                    
-                    if (event != null) {
-                        event.setSelected(true);
-                        events.addSelected(event);
-                    }else {
-                    	events.cleanSelected();
-                    }
 
                 }
             }
@@ -105,9 +111,10 @@ public class MonthContentPanel extends JPanel {
 
     
     private CalendarEvent getEventFromrUI(final int x, final int y) {
-    	int xPosition = x/(getWidth()/7);
-    	
-    	if(xPosition>6) {
+    	int xPosition = x/(getWidthDay());
+
+
+    	if(xPosition>(MANAGED_DAYS-1)) {
     		//we are in the border of the panel
     		return null;
     	}
@@ -115,6 +122,20 @@ public class MonthContentPanel extends JPanel {
     	int yPosition = (y + 2)/17; 
     	CalendarEvent event = grid.findEventAtPosition(xPosition,yPosition);
     	return event;
+
+    	
+    }
+    
+    private Date getDateFromrUI(final int x, final int y) {
+    	int xPosition = x/(getWidthDay());
+    	
+    	if(xPosition>MANAGED_DAYS-1) {
+    		//we are in the border of the panel
+    		return null;
+    	}
+    	
+		ArrayList<Date> list = CalendarUtil.getDatesSort(layoutManager.getStartRange(), layoutManager.getEndRange());
+    	return 	CalendarUtil.pixelToDate(list.get(xPosition), y, getHeight());
 
     	
     }
@@ -136,10 +157,10 @@ public class MonthContentPanel extends JPanel {
         final Color dayDisableBackgroundColor = config.getDayDisabledBackgroundColor();
         final Color dayDefaultBackgroundColor = config.getDayDefaultBackgroundColor();
 
-		final int dayWidth = width/7;
+		final int dayWidth = width/MANAGED_DAYS;
 		int x = 0;	
 		
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < MANAGED_DAYS; i++) {
 	        if (!isEnabled()) {
 	            graphics2d.setColor(dayDisableBackgroundColor);
 	            graphics2d.fillRect(x, 0, dayWidth, height);
@@ -171,7 +192,7 @@ public class MonthContentPanel extends JPanel {
     	        
         final CalendarConfig config = layoutManager.getOwner().getConfig();
                 
-		final int dayWidth = getWidth()/7;
+		final int dayWidth = getWidthDay();
         int y = 2;
         int x = 0;        
         int offset = 0;
@@ -210,6 +231,10 @@ public class MonthContentPanel extends JPanel {
         	
 		}
         
+    }
+    
+    private int getWidthDay() {
+    	return getWidth()/MANAGED_DAYS;
     }
     
     private int eventWidth(CalendarEvent event,int dayWidth) {

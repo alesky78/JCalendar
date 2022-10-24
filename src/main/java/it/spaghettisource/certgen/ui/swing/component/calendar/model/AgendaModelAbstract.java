@@ -43,34 +43,44 @@ public abstract class AgendaModelAbstract implements AgendaModel {
 	}
 	
 	@Override
-    public void addSelected(final CalendarEvent selected) {
-    	if(selectedEvent !=null && selectedEvent.equals(selected)) {
+    public void addSelected(Date exactDate,CalendarEvent selected) {
+		CalendarEvent previous = selectedEvent;
+		CalendarEvent actual   = selected;
+		
+    	if(previous !=null && actual.equals(previous)) {
     		return;
     	}
     	
-    	if(selectedEvent !=null) {
-        	selectedEvent.setSelected(false);    		
+    	if(previous !=null) {
+    		previous.setSelected(false);    		
     	}
+    	actual.setSelected(true);
     	
-    	selectedEvent = selected;
-    	fireChangeSelectionEvent(selectedEvent);
+    	
+    	selectedEvent = actual;
+    	fireChangeSelectionEvent(exactDate,previous,actual);
     }
     
     @Override
-    public CalendarEvent getSelected() {
-        return selectedEvent;
-    }
-
-    @Override
-    public void cleanSelected() {
+    public void cleanSelected(Date exactDate) {
    
     	if(selectedEvent==null) {
-    		return;
+    		fireCleanSelectionEvent(exactDate,null);
+        	
+    	}else {
+        	CalendarEvent cleanEvent = selectedEvent;
+        	
+        	selectedEvent.setSelected(false);
+        	selectedEvent = null;
+        	fireCleanSelectionEvent(exactDate,cleanEvent);    		
     	}
     	
-    	selectedEvent.setSelected(false);
-    	selectedEvent = null;
-    	fireCleanSelectionEvent();
+
+    }
+    
+	@Override
+    public CalendarEvent getSelected() {
+        return selectedEvent;
     }
     
     @Override
@@ -133,22 +143,23 @@ public abstract class AgendaModelAbstract implements AgendaModel {
         }
     }
     
-    protected void fireChangeSelectionEvent(CalendarEvent calendarEvent) {
+    protected void fireChangeSelectionEvent(Date date, CalendarEvent previousSelectedEvent,CalendarEvent actualSelectedEvent) {
         parent.invalidate();
         parent.repaint();
     	
-        final SelectionChangedEvent event = new SelectionChangedEvent(calendarEvent);
+        final SelectionChangedEvent event = new SelectionChangedEvent(date,previousSelectedEvent,actualSelectedEvent);
         for (final SelectionChangedListener listener : selectionChangedListeners) {
             listener.selectionChanged(event);
         }
     }
     
-    protected void fireCleanSelectionEvent() {
+    protected void fireCleanSelectionEvent(Date date,CalendarEvent previousSelectedEvent) {
         parent.invalidate();
         parent.repaint();
     	
+        final SelectionChangedEvent event = new SelectionChangedEvent(date,previousSelectedEvent,null);
         for (final SelectionChangedListener listener : selectionChangedListeners) {
-            listener.selectionClean();
+            listener.selectionClean(event);
         }
     }
     

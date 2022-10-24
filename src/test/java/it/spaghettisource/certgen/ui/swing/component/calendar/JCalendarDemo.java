@@ -46,7 +46,7 @@ public class JCalendarDemo extends JFrame {
 
 	private JSplitPane content;
 	private JToolBar toolBar;
-	private JTextArea description;
+	private JTextArea console;
 	
 	//calendar open
 	private JCalendar jCalendar;
@@ -74,18 +74,19 @@ public class JCalendarDemo extends JFrame {
 		toolBar.add(removeButton);
 		toolBar.add(modifyButton);
 
-		description = new JTextArea();
-		description.setLineWrap(true);
-		description.setRows(10);
+		console = new JTextArea();
+		console.setLineWrap(true);
+		console.setRows(10);
 		
 		//the framework objects
 		model = new AgendaModelMemory();
 		jCalendar = new JCalendar(model);
 		jCalendar.setPreferredSize(new Dimension(1024, 768));
+		bindJCalendarListeners();
 
 		content = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		content.add(jCalendar);
-		content.add(new JScrollPane(description));
+		content.add(new JScrollPane(console));
 
 		this.getContentPane().setLayout(new BorderLayout(10, 10));
 		this.getContentPane().add(toolBar, BorderLayout.PAGE_START);
@@ -117,6 +118,9 @@ public class JCalendarDemo extends JFrame {
 
 			model.add(calendarEvent);
 		}
+		
+		//just clean the log screen before to start the app
+		console.setText("");
 
 	}
 
@@ -130,9 +134,6 @@ public class JCalendarDemo extends JFrame {
 				CalendarEvent calendarEvent = new CalendarEvent("event added", start, start);
 				calendarEvent.setBackgroundColor(Color.RED);
 				model.add(calendarEvent);
-
-				
-				
 			}
 		});
 
@@ -158,46 +159,65 @@ public class JCalendarDemo extends JFrame {
 				}
 			}
 		});
+	}
 
 
+			
+	private void bindJCalendarListeners() {
+		
 		model.addModelChangedListener(new ModelChangedListener() {
 
 			@Override
 			public void eventRemoved(final ModelChangedEvent event) {
-				description.append("Event removed " + event.getCalendarEvent() + "\n");
+				console.append("Event removed " + event.getCalendarEvent() + "\n");
 			}
 
 			@Override
 			public void eventUpdate(final ModelChangedEvent event) {
-				description.append("Event changed " + event.getCalendarEvent() + "\n");
+				console.append("Event changed " + event.getCalendarEvent() + "\n");
 			}
 
 			@Override
 			public void eventAdded(final ModelChangedEvent event) {
-				description.append("Event added " + event.getCalendarEvent() + "\n");
+				console.append("Event added " + event.getCalendarEvent() + "\n");
 			}
 		});
 
+		/**
+		 * this is the best point where to customize the component and introduce CRUD operation on the events and show popup/dialogs
+		 */
 		model.addSelectionChangedListener(new SelectionChangedListener() {
 
+			/**
+			 * this event is launch when you click on an exist event in the calendar 
+			 * here is possible open a popoup/dialog to manage the update or deletion of this event
+			 */
 			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
-				description.append("Event selected " + event.getCalendarEvent());
-				description.append("\n");
+				console.append("Selected event, Date: "+event.getSelectedDate()+" actual:" + event.getActualSelectedEvent() +" previous:" + event.getPreviousSelectedEvent());
+				console.append("\n");
+				
 			}
 
+			/**
+			 * this event is launch when you click on an empty area in the calendar
+			 * here is possible open a popoup/dialog to manage the creation of a new event
+			 */
 			@Override
-			public void selectionClean() {
-				description.append("Selection cleared");
-				description.append("\n");
+			public void selectionClean(SelectionChangedEvent event) {
+				console.append("Selected clean, Date: "+event.getSelectedDate()+" actual:" + event.getActualSelectedEvent() +" previous:" + event.getPreviousSelectedEvent());
+				console.append("\n");
+				
+				
 			}
+
 		});
 
 		model.addIntervalChangedListener(new IntervalChangedListener() {
 
 			@Override
 			public void intervalChanged(final IntervalChangedEvent event) {
-				description.append("IntervalChangedListener interval changed " + sdf.format(event.getIntervalStart()) + " "+ sdf.format(event.getIntervalEnd()) + "\n");
+				console.append("IntervalChangedListener interval changed " + sdf.format(event.getIntervalStart()) + " "+ sdf.format(event.getIntervalEnd()) + "\n");
 			}
 		});
 		
