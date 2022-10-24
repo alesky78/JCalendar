@@ -17,8 +17,6 @@ But that was a demo with several limitation like:
  - not present a injectable standard model class like in the standard swing component
  - the listener was managed at high level classes and the model was not always involved
  
- this implementation actually is used in one of my commercial product and has hundreds customer, just to give you confidence of the stability of this implementation
- but my UC was simple and there are still limitations in the component that can be overcome.
 
 ## How to use
 this is a short introduction, doesn't intend to give a full details on the way how to use it, 
