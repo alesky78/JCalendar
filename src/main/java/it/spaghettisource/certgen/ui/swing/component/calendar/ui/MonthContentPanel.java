@@ -98,12 +98,15 @@ public class MonthContentPanel extends JPanel {
 
             @Override
             public void mouseMoved(final MouseEvent e) {
-                super.mouseMoved(e);
+            	
+            	boolean enableTooltipOnEvent = layoutManager.getOwner().getConfig().getEnableTooltipOnEvent();
 
-                final CalendarEvent event = getEventFromrUI(e.getX(), e.getY());
-                if (event != null) {
-                    setToolTipText(calendar.getTooltipFormater().format(event));
-                }
+            	if(enableTooltipOnEvent) {
+                    final CalendarEvent event = getEventFromrUI(e.getX(), e.getY());
+                    if (event != null) {
+                        setToolTipText(calendar.getTooltipFormater().format(event));
+                    }            		
+            	}
 
             }
         });        

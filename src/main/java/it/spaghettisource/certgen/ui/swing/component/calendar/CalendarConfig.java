@@ -8,7 +8,10 @@ import java.awt.Color;
  */
 public class CalendarConfig {
 
-	
+	//tootip management
+    private boolean enableTooltipOnEvent;
+    
+    //Colors used by the cell draw
     private Color lineColor;
     
     //Colors used by the header of 
@@ -26,6 +29,8 @@ public class CalendarConfig {
     private Color dayDefaultBackgroundColor;    
     
     public CalendarConfig() {
+    	enableTooltipOnEvent = true;
+    	
         lineColor = new Color(220, 220, 220);
 
         todayHeaderBackgroundColor = new Color(240, 230, 140, 128);
@@ -41,8 +46,16 @@ public class CalendarConfig {
         dayDisabledBackgroundColor = new Color(148, 197, 217, 128);
         dayDefaultBackgroundColor = Color.WHITE;
     }
+    
+	public boolean getEnableTooltipOnEvent() {
+		return enableTooltipOnEvent;
+	}
+	
+    public void setEnableTooltipOnEvent(boolean enableTooltipOnEvent) {
+		this.enableTooltipOnEvent = enableTooltipOnEvent;
+	}
 
-    public Color getLineColor() {
+	public Color getLineColor() {
         return lineColor;
     }
 
@@ -113,5 +126,7 @@ public class CalendarConfig {
 	public void setDayDefaultBackgroundColor(Color dayDefaultBackgroundColor) {
 		this.dayDefaultBackgroundColor = dayDefaultBackgroundColor;
 	}
+
+
     
 }
