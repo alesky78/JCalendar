@@ -10,8 +10,8 @@ import java.util.Date;
 
 import javax.swing.JPanel;
 
-import it.spaghettisource.certgen.ui.swing.component.calendar.model.AgendaModel;
-import it.spaghettisource.certgen.ui.swing.component.calendar.model.AgendaModelMemory;
+import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarModel;
+import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarModelMemory;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.CalendarContentPanel;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.CalendarHeaderPanel;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.strategy.DisplayStrategy;
@@ -34,21 +34,21 @@ public class JCalendar extends JPanel {
     
 	private DisplayStrategy strategy;
     
-    private AgendaModel model;
+    private CalendarModel model;
 
     public JCalendar() {
-    	this(new AgendaModelMemory(),new CalendarConfig());
+    	this(new CalendarModelMemory(),new CalendarConfig());
     }
     
     public JCalendar(CalendarConfig config) {
-    	this(new AgendaModelMemory(),config);
+    	this(new CalendarModelMemory(),config);
     }
     
-    public JCalendar(AgendaModel model) {
+    public JCalendar(CalendarModel model) {
     	this(model,new CalendarConfig());
     }
     
-    public JCalendar(AgendaModel model, CalendarConfig config) {
+    public JCalendar(CalendarModel model, CalendarConfig config) {
 
         state = new CalendarState(Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance());
         formater = new CalendarEventFormatDefault();
@@ -144,7 +144,7 @@ public class JCalendar extends JPanel {
      * 
      * @return
      */
-    public AgendaModel getModel() {
+    public CalendarModel getModel() {
 		return model;
 	}
     	

@@ -188,7 +188,7 @@ public class EventGrid {
 			return 0;
 		}
 		
-		return 6;
+		return managedDays-1;
 		
 	}
 	

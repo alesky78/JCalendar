@@ -30,11 +30,13 @@ class DisplayStrategyMonth implements DisplayStrategy {
 	
     private final int WEEKS_PER_MONTH = 6;	//Amount of week to show
 	private final int FIRST_DAY_WEEK = 2;	//Calendar.MONDAY to use has first day of the week
-
+	private final int MANAGED_DAYS = 7;		//managed days per week, this value represent the amount of days show in the UI so this value cannot be more then 7
+	private final int WEEK_DAYS = 7;		//number of days per week	
+	
     private final SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy");
 
     private JPanel displayPanel;	//panel whit all the days cell
-    private final MonthLayoutManager[] days = new MonthLayoutManager[6];	//day cell
+    private final MonthLayoutManager[] days = new MonthLayoutManager[6];	//days cell
     
 
     public DisplayStrategyMonth(final JCalendar calendar, final CalendarContentPanel contentPane, final CalendarHeaderPanel headerPane, final CalendarState state) {
@@ -64,10 +66,9 @@ class DisplayStrategyMonth implements DisplayStrategy {
         state.setIntervalStart(CalendarUtil.copyCalendar(c, true));
         
         for (int i = 0; i < WEEKS_PER_MONTH; i++) {
-            days[i] = new MonthLayoutManager(calendar, c.getTime(), 0.1f,FIRST_DAY_WEEK);
-            days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
+            days[i] = new MonthLayoutManager(calendar, state, c.getTime(), 0.1f,FIRST_DAY_WEEK,MANAGED_DAYS);
             displayPanel.add(days[i].layout());
-            c.add(Calendar.DATE, 7);
+            c.add(Calendar.DATE, WEEK_DAYS);
         }
        
         Calendar endInterval = CalendarUtil.copyCalendar(c, true);
@@ -145,7 +146,6 @@ class DisplayStrategyMonth implements DisplayStrategy {
         
         for (int i = 0; i < WEEKS_PER_MONTH; i++) {
             days[i].setStartRange(c.getTime());
-            days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
             c.add(Calendar.DAY_OF_MONTH, 7);
         }
         

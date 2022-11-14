@@ -2,12 +2,12 @@ package it.spaghettisource.certgen.ui.swing.component.calendar.ui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JPanel;
 
+import it.spaghettisource.certgen.ui.swing.component.calendar.CalendarState;
 import it.spaghettisource.certgen.ui.swing.component.calendar.JCalendar;
 import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 
@@ -20,42 +20,38 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 public class MonthLayoutManager {
 
 
-	
 	private Date startRange;	//first date of the week
 	private Date endRange;		//last date of the week	
+	private int managedDays;	//amount of days to show in the UI per this week
+	
+	private final JCalendar owner;
+	private final CalendarState state;
 	
 	private final MonthHeaderPanel headerPanel;
 	private final MonthContentPanel contentPanel;
-	private final JCalendar owner;
 	private float headerRatio = 0.0f;
 	private int firstDayOfWeek = 0;
 
-	/**
-	 * Creates a new instance of {@link MonthLayoutManager}
-	 * 
-	 * @param startRange
-	 * @param headerRatio
-	 */
-	public MonthLayoutManager(final JCalendar owner, final Date startRange,int firstDayOfWeek) {
-
-		setStartRange(startRange);
-		
-		this.owner = owner;
-		this.headerPanel = new MonthHeaderPanel(this);
-		this.contentPanel = new MonthContentPanel(this);
-		this.firstDayOfWeek = firstDayOfWeek;
-		
-	}
 
 	/**
+	 *Creates a new instance of {@link MonthLayoutManager}
 	 * 
 	 * @param day
 	 * @param headerRatio
 	 */
-	public MonthLayoutManager(final JCalendar owner, final Date day, final float headerRatio,int firstDayOfWeek) {
-
-		this(owner, day, firstDayOfWeek);
+	public MonthLayoutManager(final JCalendar owner, CalendarState state, final Date startRange, final float headerRatio,int firstDayOfWeek, int managedDays) {
+		
+		this.owner = owner;
+		this.state = state;
+		this.firstDayOfWeek = firstDayOfWeek;
 		this.headerRatio = headerRatio;
+		this.managedDays = managedDays;
+		this.startRange = startRange;
+		
+		//fix: all this objet required that managedDays is already populated 
+		this.headerPanel = new MonthHeaderPanel(this);
+		this.contentPanel = new MonthContentPanel(this);
+		calculateEndDate();
 
 	}
 
@@ -81,16 +77,29 @@ public class MonthLayoutManager {
 	public JCalendar getOwner() {
 		return owner;
 	}
+	
+	/**
+	 * verify if a date is part of the manager month
+	 * 
+	 * @param toCheck
+	 * @return
+	 */
+	public boolean isDateInManagedMonth(Date toCheck) {
+		return CalendarUtil.isSameMonth(state.getDate(), CalendarUtil.getCalendar(toCheck, false) );
+	}
+
+	protected void calculateEndDate() {
+		Calendar temp = CalendarUtil.getCalendar(startRange, true);
+		temp.add(Calendar.DAY_OF_MONTH, managedDays);
+		this.endRange = temp.getTime();
+	}
 
 	/**
-	 * @param date
-	 *            the date to set
+	 * @param date the date to set
 	 */
 	public void setStartRange(final Date startRange) {
 		this.startRange = startRange;
-		Calendar temp = CalendarUtil.getCalendar(startRange, true);
-		temp.add(Calendar.DAY_OF_MONTH, 6);
-		this.endRange = temp.getTime();
+		calculateEndDate();
 
 	}
 	
@@ -102,12 +111,12 @@ public class MonthLayoutManager {
 		return endRange;
 	}
 
-	public void setEnabled(final boolean enabled) {
-		this.contentPanel.setEnabled(enabled);
-	}
-
 	public int getFirstDayOfWeek() {
 		return firstDayOfWeek;
 	}
 
+	public int getManagedDays() {
+		return managedDays;
+	}
+	
 }

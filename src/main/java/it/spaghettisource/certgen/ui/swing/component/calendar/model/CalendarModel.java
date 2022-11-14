@@ -12,7 +12,7 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.events.SelectionCh
  * 
  * @author Alessandro D'Ottavio
  */
-public interface AgendaModel {
+public interface CalendarModel {
 
 	public void setParent(JCalendar parent);
 	

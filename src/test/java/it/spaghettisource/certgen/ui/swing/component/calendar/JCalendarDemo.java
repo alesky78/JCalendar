@@ -23,8 +23,8 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.events.ModelChange
 import it.spaghettisource.certgen.ui.swing.component.calendar.events.ModelChangedListener;
 import it.spaghettisource.certgen.ui.swing.component.calendar.events.SelectionChangedEvent;
 import it.spaghettisource.certgen.ui.swing.component.calendar.events.SelectionChangedListener;
-import it.spaghettisource.certgen.ui.swing.component.calendar.model.AgendaModel;
-import it.spaghettisource.certgen.ui.swing.component.calendar.model.AgendaModelMemory;
+import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarModel;
+import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarModelMemory;
 import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarEvent;
 import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 
@@ -50,7 +50,7 @@ public class JCalendarDemo extends JFrame {
 	
 	//calendar open
 	private JCalendar jCalendar;
-	private AgendaModel model;
+	private CalendarModel model;
 
 	private JButton removeButton;
 	private JButton addButton;
@@ -79,7 +79,7 @@ public class JCalendarDemo extends JFrame {
 		console.setRows(10);
 		
 		//the framework objects
-		model = new AgendaModelMemory();
+		model = new CalendarModelMemory();
 		jCalendar = new JCalendar(model);
 		jCalendar.setPreferredSize(new Dimension(1024, 768));
 		bindJCalendarListeners();

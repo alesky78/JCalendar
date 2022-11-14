@@ -12,7 +12,7 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.events.ModelChange
 import it.spaghettisource.certgen.ui.swing.component.calendar.events.SelectionChangedEvent;
 import it.spaghettisource.certgen.ui.swing.component.calendar.events.SelectionChangedListener;
 
-public abstract class AgendaModelAbstract implements AgendaModel {
+public abstract class CalendarModelAbstract implements CalendarModel {
 
     private final List<ModelChangedListener> collectionChangedListeners;
     private final List<SelectionChangedListener> selectionChangedListeners;
@@ -23,9 +23,9 @@ public abstract class AgendaModelAbstract implements AgendaModel {
     protected CalendarEvent selectedEvent;
     
     /**
-     * Creates a new instance of {@link AgendaModelMemory}
+     * Creates a new instance of {@link CalendarModelMemory}
      */
-    public AgendaModelAbstract() {
+    public CalendarModelAbstract() {
         this.collectionChangedListeners = new ArrayList<ModelChangedListener>();
         this.selectionChangedListeners = new ArrayList<SelectionChangedListener>();
         this.intervalChangedListener = new ArrayList<IntervalChangedListener>();

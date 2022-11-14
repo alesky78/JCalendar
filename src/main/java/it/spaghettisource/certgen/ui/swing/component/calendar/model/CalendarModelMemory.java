@@ -15,14 +15,14 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
  * 
  * @author Alessandro D'Ottavio
  */
-public class AgendaModelMemory extends AgendaModelAbstract {
+public class CalendarModelMemory extends CalendarModelAbstract {
 
     private final MultiHashMap indexedEvents;
 
     /**
-     * Creates a new instance of {@link AgendaModelMemory}
+     * Creates a new instance of {@link CalendarModelMemory}
      */
-    public AgendaModelMemory() {
+    public CalendarModelMemory() {
     	super();
         this.indexedEvents = new MultiHashMap();
     }

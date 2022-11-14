@@ -35,7 +35,7 @@ public class CalendarUtil {
     public static boolean isSameMonth(final Calendar c1, final Calendar c2) {
         return c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH);
     }
-
+    
     public static boolean isToday(final Date date) {
         final Calendar now = Calendar.getInstance();
         final Calendar calendar = Calendar.getInstance();

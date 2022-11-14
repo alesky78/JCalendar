@@ -61,7 +61,7 @@ public class MonthHeaderPanel extends JPanel {
 		//create the range of dates
 		ArrayList<Date> list = CalendarUtil.getDatesSort(layoutManager.getStartRange(), layoutManager.getEndRange());
 		
-		final int dayWidth = width/7;
+		final int dayWidth = getWidthDay();
 		int x = 0;		
 		for (Date actualDate : list) {
 			
@@ -92,5 +92,9 @@ public class MonthHeaderPanel extends JPanel {
 	private String generateHeaderText(Date date) {
 		return SDF.format(date);
 	}
+	
+    private int getWidthDay() {
+    	return getWidth()/layoutManager.getManagedDays();
+    }
 
 }

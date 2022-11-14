@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 
 import it.spaghettisource.certgen.ui.swing.component.calendar.CalendarConfig;
 import it.spaghettisource.certgen.ui.swing.component.calendar.JCalendar;
-import it.spaghettisource.certgen.ui.swing.component.calendar.model.AgendaModel;
+import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarModel;
 import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarEvent;
 import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarUtil;
 import it.spaghettisource.certgen.ui.swing.component.calendar.util.GraphicsUtil;
@@ -29,7 +29,6 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.util.EventGrid;
 @SuppressWarnings("serial")
 public class MonthContentPanel extends JPanel {
     
-	private final int MANAGED_DAYS = 7;	
     private final MonthLayoutManager layoutManager;
     private final EventGrid grid;
     
@@ -40,7 +39,7 @@ public class MonthContentPanel extends JPanel {
         super(true);
         setOpaque(false);
         this.layoutManager = owner;
-        grid = new EventGrid(MANAGED_DAYS);
+        grid = new EventGrid(layoutManager.getManagedDays());
         addEventSelectedListeners();
         addToolTipListner();
     }
@@ -69,7 +68,7 @@ public class MonthContentPanel extends JPanel {
                 if (e.getClickCount() == 1) {
                 	
                 	if(event!=null || date!=null) {	//if this condition is not satisfied we are in the border of the panel and we cannot identify correctly events
-                        final AgendaModel events = calendar.getModel();
+                        final CalendarModel events = calendar.getModel();
                         
                         if (event != null) {
                             event.setSelected(true);
@@ -117,7 +116,7 @@ public class MonthContentPanel extends JPanel {
     	int xPosition = x/(getWidthDay());
 
 
-    	if(xPosition>(MANAGED_DAYS-1)) {
+    	if(xPosition>(layoutManager.getManagedDays()-1)) {
     		//we are in the border of the panel
     		return null;
     	}
@@ -132,7 +131,7 @@ public class MonthContentPanel extends JPanel {
     private Date getDateFromrUI(final int x, final int y) {
     	int xPosition = x/(getWidthDay());
     	
-    	if(xPosition>MANAGED_DAYS-1) {
+    	if(xPosition>layoutManager.getManagedDays()-1) {
     		//we are in the border of the panel
     		return null;
     	}
@@ -154,37 +153,40 @@ public class MonthContentPanel extends JPanel {
     
     private void drawBackground(final Graphics2D graphics2d) {
         final int height = getHeight();
-        final int width = getWidth();
         final JCalendar calendar = layoutManager.getOwner();
         final CalendarConfig config = calendar.getConfig();
         final Color dayDisableBackgroundColor = config.getDayDisabledBackgroundColor();
         final Color dayDefaultBackgroundColor = config.getDayDefaultBackgroundColor();
 
-		final int dayWidth = width/MANAGED_DAYS;
+		final int dayWidth = getWidthDay();
 		int x = 0;	
 		
-		for (int i = 0; i < MANAGED_DAYS; i++) {
-	        if (!isEnabled()) {
-	            graphics2d.setColor(dayDisableBackgroundColor);
-	            graphics2d.fillRect(x, 0, dayWidth, height);
-	        }else {
+		//create the range of dates
+		ArrayList<Date> list = CalendarUtil.getDatesSort(layoutManager.getStartRange(), layoutManager.getEndRange());
+		
+        for (Date actualDate : list) {
+        	
+	        if (layoutManager.isDateInManagedMonth(actualDate)) {
 	        	graphics2d.setColor(dayDefaultBackgroundColor);
-	            graphics2d.fillRect(x, 0, dayWidth, height);
+	            graphics2d.fillRect(x, 0, dayWidth, height);        	
+	        }else {
+	            graphics2d.setColor(dayDisableBackgroundColor);
+	            graphics2d.fillRect(x, 0, dayWidth, height);		        	
 	        }
-
-	        graphics2d.setColor(config.getLineColor());
+        	
+        	graphics2d.setColor(config.getLineColor());
 	        graphics2d.drawRect(x, 0, dayWidth, height);
 			
 			x = x + dayWidth;
-		}
-        
+        }
+		        
     }
 
     
     
     private void drawCalendarEvents(final Graphics2D graphics2d) {
 
-    	AgendaModel model = layoutManager.getOwner().getModel();
+    	CalendarModel model = layoutManager.getOwner().getModel();
 
 		//create the range of dates
 		ArrayList<Date> list = CalendarUtil.getDatesSort(layoutManager.getStartRange(), layoutManager.getEndRange());
@@ -237,7 +239,7 @@ public class MonthContentPanel extends JPanel {
     }
     
     private int getWidthDay() {
-    	return getWidth()/MANAGED_DAYS;
+    	return getWidth()/layoutManager.getManagedDays();
     }
     
     private int eventWidth(CalendarEvent event,int dayWidth) {
