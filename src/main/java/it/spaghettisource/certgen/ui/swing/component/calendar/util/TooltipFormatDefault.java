@@ -1,6 +1,7 @@
 package it.spaghettisource.certgen.ui.swing.component.calendar.util;
 
 import java.text.SimpleDateFormat;
+import java.util.StringTokenizer;
 
 import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarEvent;
 
@@ -9,7 +10,7 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarEven
  * 
  * @author Alessandro D'Ottavio
  */
-public class CalendarEventFormatDefault implements CalendarEventFormat {
+public class TooltipFormatDefault implements TooltipFormat {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -27,7 +28,7 @@ public class CalendarEventFormatDefault implements CalendarEventFormat {
         if (calendarEvent.getDescription() != null) {
             formatted.append("<tr>");
             formatted.append("<td><b>Description: </b></td>");
-            formatted.append("<td>").append(calendarEvent.getDescription()).append("</td>");
+            formatted.append("<td>").append(splitLine(calendarEvent.getDescription())).append("</td>");
             formatted.append("</tr>");
         }
 
@@ -52,6 +53,24 @@ public class CalendarEventFormatDefault implements CalendarEventFormat {
         formatted.append("</html>");
         return formatted.toString();
     }
+    
+    
+    private String splitLine(String text) {
+    	
+    	StringTokenizer tokenizer = new StringTokenizer(text, "\n");
+    	
+        StringBuilder formatted = new StringBuilder();
+        while (tokenizer.hasMoreElements()) {
+        	formatted.append(tokenizer.nextElement());
+			if(tokenizer.hasMoreElements()) {
+	        	formatted.append("<br>");
+			}
+		}
+        
+        return formatted.toString();
+    	
+    }
+    
 
 
 

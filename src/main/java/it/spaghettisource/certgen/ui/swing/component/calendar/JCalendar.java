@@ -17,8 +17,8 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.ui.CalendarHeaderP
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.strategy.DisplayStrategy;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.strategy.DisplayStrategyFactory;
 import it.spaghettisource.certgen.ui.swing.component.calendar.ui.strategy.DisplayStrategyType;
-import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarEventFormat;
-import it.spaghettisource.certgen.ui.swing.component.calendar.util.CalendarEventFormatDefault;
+import it.spaghettisource.certgen.ui.swing.component.calendar.util.TooltipFormat;
+import it.spaghettisource.certgen.ui.swing.component.calendar.util.TooltipFormatDefault;
 
 
 public class JCalendar extends JPanel {
@@ -30,28 +30,37 @@ public class JCalendar extends JPanel {
     
     private CalendarState state;
     private CalendarConfig config;
-    private CalendarEventFormat formater;
+    private TooltipFormat tooltipFormater;
     
 	private DisplayStrategy strategy;
     
     private CalendarModel model;
 
     public JCalendar() {
-    	this(new CalendarModelMemory(),new CalendarConfig());
+    	this(new CalendarModelMemory(),new CalendarConfig(),new TooltipFormatDefault());
     }
     
     public JCalendar(CalendarConfig config) {
-    	this(new CalendarModelMemory(),config);
+    	this(new CalendarModelMemory(),config, new TooltipFormatDefault());
     }
+    
+    public JCalendar(TooltipFormat formater) {
+    	this(new CalendarModelMemory(),new CalendarConfig(), formater);
+    }    
+    
+    public JCalendar(CalendarConfig config,TooltipFormat formater) {
+    	this(new CalendarModelMemory(),config, formater);
+    }    
     
     public JCalendar(CalendarModel model) {
-    	this(model,new CalendarConfig());
+    	this(model,new CalendarConfig(),new TooltipFormatDefault());
     }
     
-    public JCalendar(CalendarModel model, CalendarConfig config) {
+    
+    public JCalendar(CalendarModel model, CalendarConfig config, TooltipFormat formater) {
 
         state = new CalendarState(Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance());
-        formater = new CalendarEventFormatDefault();
+        this.tooltipFormater = formater;
 
         this.config = config;
         this.model = model;
@@ -139,7 +148,29 @@ public class JCalendar extends JPanel {
         strategy.changeIntervalStart(date);
     }    
     
+    
+    
     /**
+     * set the model associated to this calendar
+     * 
+     * @param model
+     */	
+    public void setModel(CalendarModel model) {
+ 
+		this.model = model;
+        model.setParent(this);
+        
+        //clean the UI and reinitialize it
+        this.remove(headerPane);
+        this.remove(contentPane);
+        this.setLayout(null);
+        
+        //re-init the ui
+        initGui();
+        bindListeners();
+	}
+
+	/**
      * Return the model associated to this calendar
      * 
      * @return
@@ -189,15 +220,15 @@ public class JCalendar extends JPanel {
     /**
      * @return
      */
-    public CalendarEventFormat getTooltipFormater() {
-        return formater;
+    public TooltipFormat getTooltipFormater() {
+        return tooltipFormater;
     }
 
     /**
      * @param formater
      */
-    public void setTooltipFormater(final CalendarEventFormat formater) {
-        this.formater = formater;
+    public void setTooltipFormater(final TooltipFormat formater) {
+        this.tooltipFormater = formater;
     }
     
     

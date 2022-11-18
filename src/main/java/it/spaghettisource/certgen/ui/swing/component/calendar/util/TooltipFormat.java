@@ -6,7 +6,7 @@ import it.spaghettisource.certgen.ui.swing.component.calendar.model.CalendarEven
  * To provide a custom tooltip formatter implement this interfaces and use
  * the method setTooltipFormater(...) from the JCalendar class
  */
-public interface CalendarEventFormat {
+public interface TooltipFormat {
 
 	public String format(CalendarEvent calendarEvent);
 

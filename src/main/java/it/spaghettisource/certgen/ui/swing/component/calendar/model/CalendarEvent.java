@@ -18,6 +18,8 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
     private String summary;
     private String description;
     private String location;
+    
+    private Object userObject;	//permit to store additional data in the event
 
     private boolean selected;
 
@@ -114,8 +116,26 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
         this.end = end;
     }
     
- 
-    public Color getBackgroundColor() {
+    /**
+     * Returns this event's user object.
+     *
+     * @return  the Object stored at this event's by the user
+     */
+    public Object getUserObject() {
+		return userObject;
+	}
+
+    /**
+     * Sets the user object for this node to <code>userObject</code>.
+     *
+     * @param   userObject      the Object that constitutes this event's
+     *                          user-specified data
+     */
+	public void setUserObject(Object userObject) {
+		this.userObject = userObject;
+	}
+
+	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
 
